@@ -28,7 +28,7 @@ public class GeneratorMenu extends AbstractContainerMenu {
 
     public GeneratorMenu(int windowId, Inventory inv, BlockEntity entity, ContainerData data) {
         super(ModMenuTypes.GENERATOR_MENU.get(), windowId);
-        checkContainerSize(inv, 1);
+        checkContainerSize(inv, 4);
 
         blockEntity = ((GeneratorBlockEntityBase) entity);
         this.level = inv.player.level;
@@ -50,6 +50,10 @@ public class GeneratorMenu extends AbstractContainerMenu {
         if(blockEntity != null) {
             blockEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h -> {
                 addSlot(new SlotItemHandler(h, 0, 80,35));
+
+                addSlot(new SlotItemHandler(h, 1, 26,17));
+                addSlot(new SlotItemHandler(h, 2, 26,35));
+                addSlot(new SlotItemHandler(h, 3, 26,53));
             });
         }
 

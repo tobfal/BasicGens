@@ -1,6 +1,7 @@
 package de.tobfal.basicgens.block.entity;
 
 import de.tobfal.basicgens.energy.ModEnergyStorage;
+import de.tobfal.basicgens.init.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -11,6 +12,7 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -19,10 +21,12 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
+import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 
@@ -30,7 +34,7 @@ public abstract class GeneratorBlockEntityBase extends BlockEntity implements Me
 
     //Handlers
     private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
-    private final ItemStackHandler itemHandler = new ItemStackHandler(1) {
+    private final ItemStackHandler itemHandler = new ItemStackHandler(4) {
         @Override
         protected void onContentsChanged(int slot) {
             setChanged();
@@ -39,7 +43,7 @@ public abstract class GeneratorBlockEntityBase extends BlockEntity implements Me
         @NotNull
         @Override
         public ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
-            if(ForgeHooks.getBurnTime(stack, RecipeType.SMELTING) <= 0) return stack;
+            if(slot == 0 && ForgeHooks.getBurnTime(stack, RecipeType.SMELTING) <= 0) return stack;
             return super.insertItem(slot, stack, simulate);
         }
     };
@@ -119,6 +123,8 @@ public abstract class GeneratorBlockEntityBase extends BlockEntity implements Me
     protected void saveAdditional(@NotNull CompoundTag tag) {
         tag.put("inventory", itemHandler.serializeNBT());
         tag.put("energy", energyHandler.serializeNBT());
+        tag.putInt("fuelTime", this.fuelTime);
+        tag.putInt("maxFuelTime", this.fuelTime);
         super.saveAdditional(tag);
     }
 
@@ -127,6 +133,8 @@ public abstract class GeneratorBlockEntityBase extends BlockEntity implements Me
         super.load(nbt);
         itemHandler.deserializeNBT(nbt.getCompound("inventory"));
         energyHandler.deserializeNBT(nbt.getCompound("energy"));
+        this.fuelTime = nbt.getInt("fuelTime");
+        this.maxFuelTime = nbt.getInt("maxFuelTime");
     }
 
     @Override
@@ -146,15 +154,44 @@ public abstract class GeneratorBlockEntityBase extends BlockEntity implements Me
 
     public static void tick(Level pLevel, BlockPos pPos, BlockState pState, GeneratorBlockEntityBase pBlockEntity) {
 
-        ItemStack input = pBlockEntity.itemHandler.getStackInSlot(0);
+        pBlockEntity.outputEnergy(pBlockEntity);
 
-        if(pBlockEntity.energyHandler.getMaxEnergyStored() - pBlockEntity.energyHandler.getEnergyStored() >= pBlockEntity.energyPerTick) {
+        ItemStack input = pBlockEntity.itemHandler.getStackInSlot(0);
+        boolean checkIfFull = false;
+
+        for(int i = 1; i < pBlockEntity.itemHandler.getSlots(); i++){
+            ItemStack augment = pBlockEntity.itemHandler.getStackInSlot(i);
+            if(augment.getItem() == ModItems.CONTROLLER_AUGMENT.get()) checkIfFull = true;
+        }
+
+        if(input.isEmpty() && pBlockEntity.fuelTime <= 0) return;
+        boolean canInsertEnergy = pBlockEntity.energyHandler.getMaxEnergyStored() - pBlockEntity.energyHandler.getEnergyStored() >= pBlockEntity.energyPerTick;
+
+        if(canInsertEnergy || !checkIfFull) {
             if(pBlockEntity.fuelTime > 0) {
                 pBlockEntity.fuelTime--;
                 pBlockEntity.energyHandler.receiveEnergyIntern(pBlockEntity.energyPerTick, false);
-            } else if(!input.isEmpty()) {
+            } else if(!input.isEmpty() && canInsertEnergy) {
                 pBlockEntity.maxFuelTime = ForgeHooks.getBurnTime(pBlockEntity.itemHandler.extractItem(0, 1, false), RecipeType.SMELTING);
                 pBlockEntity.fuelTime = pBlockEntity.maxFuelTime;
+            }
+        }
+    }
+
+    private void outputEnergy(GeneratorBlockEntityBase pBlockEntity) {
+        if(pBlockEntity.energyHandler.canExtract()) {
+            for(Direction direction : Direction.values()) {
+                BlockEntity be = pBlockEntity.level.getBlockEntity(worldPosition.relative(direction));
+                if(be == null) continue;
+                boolean doContinue = be.getCapability(CapabilityEnergy.ENERGY, direction.getOpposite()).map(handler -> {
+                    if(!handler.canReceive()) return true;
+                    int sendSimulate = pBlockEntity.energyHandler.extractEnergy(pBlockEntity.energyHandler.getEnergyStored(), true);
+                    int energySent = handler.receiveEnergy(sendSimulate, false);
+                    pBlockEntity.energyHandler.extractEnergy(energySent, false);
+                    return pBlockEntity.energyHandler.getEnergyStored() > 0;
+                }).orElse(true);
+
+                if(!doContinue) return;
             }
         }
     }

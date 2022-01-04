@@ -8,6 +8,7 @@ buildscript {
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
         classpath 'org.parchmentmc:librarian:1.+'
+        classpath 'org.spongepowered:mixingradle:0.7.+'
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
@@ -15,6 +16,7 @@ apply plugin: 'org.parchmentmc.librarian.forgegradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
+apply plugin: 'org.spongepowered.mixin'
 
 version = '1.18.1-0.0.1'
 group = 'de.tobfal.basicgens' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
@@ -36,7 +38,7 @@ minecraft {
     //
     // Use non-default mappings at your own risk. They may not always work.
     // Simply re-run your setup task after changing the mappings to update your workspace.
-    mappings channel: 'official', version: '1.18.1'
+    mappings channel: 'parchment', version: '2021.12.19-1.18.1'
 
     // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg') // Currently, this location cannot be changed from the default.
 
@@ -131,6 +133,17 @@ repositories {
         name = "Progwml6 maven"
         url = "https://dvs1.progwml6.com/files/maven/"
     }
+
+    maven {
+        name = 'sponge'
+        url = 'https://repo.spongepowered.org/maven'
+    }
+    maven {
+        url = 'https://maven.blamejared.com'
+    }
+    maven {
+        url = "https://cursemaven.com"
+    }
 }
 
 dependencies {
@@ -150,6 +163,11 @@ dependencies {
     // For more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
+
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+    runtimeOnly fg.deobf("blusunrize.immersiveengineering:ImmersiveEngineering:1.18.1-7.0.1-144.34")
+
+    runtimeOnly fg.deobf("curse.maven:pipez-443900:3569514")
 }
 
 // Example for how to get properties into the manifest for reading at runtime.
