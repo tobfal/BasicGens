@@ -1,6 +1,7 @@
 package de.tobfal.basicgens.block.entity;
 
 import de.tobfal.basicgens.block.menu.GeneratorMenu;
+import de.tobfal.basicgens.init.Config;
 import de.tobfal.basicgens.init.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -14,7 +15,8 @@ import org.jetbrains.annotations.Nullable;
 public class StoneGeneratorBlockEntity extends GeneratorBlockEntityBase {
 
     public StoneGeneratorBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
-        super(ModBlockEntities.STONE_GENERATOR.get(), pWorldPosition, pBlockState, 1, 10000, 5);
+        super(ModBlockEntities.STONE_GENERATOR.get(), pWorldPosition, pBlockState, 1,
+                Config.STONE_GENERATOR_CAPACITY.get(), Config.STONE_GENERATOR_PERTICK.get(), Config.STONE_GENERATOR_TRANSFER.get());
     }
 
     @Override

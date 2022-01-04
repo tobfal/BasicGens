@@ -1,9 +1,6 @@
 package de.tobfal.basicgens;
 
-import de.tobfal.basicgens.init.ModBlockEntities;
-import de.tobfal.basicgens.init.ModBlocks;
-import de.tobfal.basicgens.init.ModItems;
-import de.tobfal.basicgens.init.ModMenuTypes;
+import de.tobfal.basicgens.init.*;
 import de.tobfal.basicgens.screen.GeneratorScreen;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
@@ -37,6 +34,8 @@ public class BasicGens
 
     public BasicGens() {
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
+
+        Config.init();
 
         ModItems.register(eventBus);
         ModBlocks.register(eventBus);
