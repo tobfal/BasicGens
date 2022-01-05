@@ -1,14 +1,13 @@
 package de.tobfal.basicgens.block.menu;
 
 import de.tobfal.basicgens.block.entity.GeneratorBlockEntityBase;
-import de.tobfal.basicgens.init.ModBlocks;
 import de.tobfal.basicgens.init.ModMenuTypes;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.MinecartItem;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -68,7 +67,7 @@ public class GeneratorMenu extends AbstractContainerMenu {
         ItemStack copyOfSourceStack = sourceStack.copy();
 
         if (pIndex < 36) {
-            if(ForgeHooks.getBurnTime(sourceStack, RecipeType.SMELTING) <= 0) return ItemStack.EMPTY;
+            if(ForgeHooks.getBurnTime(sourceStack, RecipeType.SMELTING) <= 0 || sourceStack.getItem() == Items.LAVA_BUCKET) return ItemStack.EMPTY;
             if (!moveItemStackTo(sourceStack, 36, 37, false)) {
                 return ItemStack.EMPTY;
             }

@@ -1,4 +1,5 @@
 {
   "block.basicgens.stone_generator": "Stone Generator",
-  "block.basicgens.iron_generator": "Iron Generator"
+  "block.basicgens.iron_generator": "Iron Generator",
+  "block.basicgens.nether_generator": "Nether Generator"
 }

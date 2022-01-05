@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 public class IronGeneratorBlockEntity extends GeneratorBlockEntityBase {
 
     public IronGeneratorBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
-        super(ModBlockEntities.IRON_GENERATOR.get(), pWorldPosition, pBlockState, 1,
+        super(ModBlockEntities.IRON_GENERATOR.get(), pWorldPosition, pBlockState, Config.IRON_GENERATOR_EFFICIENCY.get(),
                 Config.IRON_GENERATOR_CAPACITY.get(), Config.IRON_GENERATOR_PERTICK.get(), Config.IRON_GENERATOR_TRANSFER.get());
     }
 
@@ -26,7 +26,7 @@ public class IronGeneratorBlockEntity extends GeneratorBlockEntityBase {
 
     @Nullable
     @Override
-    public AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
+    public GeneratorMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
         return new GeneratorMenu(pContainerId, pInventory, this, this.data);
     }
 }

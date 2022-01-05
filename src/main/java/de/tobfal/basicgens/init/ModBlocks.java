@@ -2,6 +2,7 @@ package de.tobfal.basicgens.init;
 
 import de.tobfal.basicgens.BasicGens;
 import de.tobfal.basicgens.block.IronGeneratorBlock;
+import de.tobfal.basicgens.block.NetherGeneratorBlock;
 import de.tobfal.basicgens.block.StoneGeneratorBlock;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
@@ -26,6 +27,9 @@ public class ModBlocks {
 
     public static final RegistryObject<Block> IRON_GENERATOR = registerBlock("iron_generator",
             () -> new IronGeneratorBlock(BlockBehaviour.Properties.of(Material.METAL).noOcclusion()), CreativeModeTab.TAB_MISC);
+
+    public static final RegistryObject<Block> NETHER_GENERATOR = registerBlock("nether_generator",
+            () -> new NetherGeneratorBlock(BlockBehaviour.Properties.of(Material.METAL).noOcclusion()), CreativeModeTab.TAB_MISC);
 
     //----------------
 

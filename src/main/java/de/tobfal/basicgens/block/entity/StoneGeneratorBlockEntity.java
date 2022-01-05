@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 public class StoneGeneratorBlockEntity extends GeneratorBlockEntityBase {
 
     public StoneGeneratorBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
-        super(ModBlockEntities.STONE_GENERATOR.get(), pWorldPosition, pBlockState, 1,
+        super(ModBlockEntities.STONE_GENERATOR.get(), pWorldPosition, pBlockState, Config.STONE_GENERATOR_EFFICIENCY.get(),
                 Config.STONE_GENERATOR_CAPACITY.get(), Config.STONE_GENERATOR_PERTICK.get(), Config.STONE_GENERATOR_TRANSFER.get());
     }
 
@@ -26,7 +26,7 @@ public class StoneGeneratorBlockEntity extends GeneratorBlockEntityBase {
 
     @Nullable
     @Override
-    public AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
+    public GeneratorMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
         return new GeneratorMenu(pContainerId, pInventory, this, this.data);
     }
 }

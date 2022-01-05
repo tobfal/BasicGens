@@ -8,8 +8,11 @@ public class ModEnergyStorage extends EnergyStorage {
         super(capacity, maxTransfer);
     }
 
+    /**
+     * Ignores this.maxRecieve and canRecieve()
+     */
     public int receiveEnergyIntern(int maxReceive, boolean simulate) {
-        int energyReceived = Math.min(capacity - energy, Math.min(this.maxReceive, maxReceive));
+        int energyReceived = Math.min(capacity - energy, maxReceive);
         if (!simulate)
             energy += energyReceived;
         return energyReceived;

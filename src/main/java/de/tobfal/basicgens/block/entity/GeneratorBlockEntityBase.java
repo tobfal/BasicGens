@@ -2,6 +2,7 @@ package de.tobfal.basicgens.block.entity;
 
 import de.tobfal.basicgens.energy.ModEnergyStorage;
 import de.tobfal.basicgens.init.ModItems;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -10,6 +11,7 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -43,7 +45,7 @@ public abstract class GeneratorBlockEntityBase extends BlockEntity implements Me
         @NotNull
         @Override
         public ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
-            if(slot == 0 && ForgeHooks.getBurnTime(stack, RecipeType.SMELTING) <= 0) return stack;
+            if(slot == 0 && ForgeHooks.getBurnTime(stack, RecipeType.SMELTING) <= 0 && stack.getItem() != Items.LAVA_BUCKET) return stack;
             return super.insertItem(slot, stack, simulate);
         }
     };
@@ -54,14 +56,15 @@ public abstract class GeneratorBlockEntityBase extends BlockEntity implements Me
     protected final ContainerData data;
     public int fuelTime = 0;
     public int maxFuelTime = 0;
-    public int fuelEfficiency;
+    public double fuelEfficiency;
+
     public int energyPerTick;
 
-    public GeneratorBlockEntityBase(BlockEntityType<?> type, BlockPos pWorldPosition, BlockState pBlockState, int fuelEfficiency, int capacity, int energyPerTick) {
+    public GeneratorBlockEntityBase(BlockEntityType<?> type, BlockPos pWorldPosition, BlockState pBlockState, double fuelEfficiency, int capacity, int energyPerTick) {
         this(type, pWorldPosition, pBlockState, fuelEfficiency, capacity, energyPerTick, energyPerTick);
     }
 
-    public GeneratorBlockEntityBase(BlockEntityType<?> type, BlockPos pWorldPosition, BlockState pBlockState, int fuelEfficiency, int capacity, int energyPerTick, int maxTransfer) {
+    public GeneratorBlockEntityBase(BlockEntityType<?> type, BlockPos pWorldPosition, BlockState pBlockState, double fuelEfficiency, int capacity, int energyPerTick, int maxTransfer) {
         super(type, pWorldPosition, pBlockState);
 
         this.energyHandler = new ModEnergyStorage(capacity, maxTransfer){
@@ -172,7 +175,7 @@ public abstract class GeneratorBlockEntityBase extends BlockEntity implements Me
                 pBlockEntity.fuelTime--;
                 pBlockEntity.energyHandler.receiveEnergyIntern(pBlockEntity.energyPerTick, false);
             } else if(!input.isEmpty() && canInsertEnergy) {
-                pBlockEntity.maxFuelTime = ForgeHooks.getBurnTime(pBlockEntity.itemHandler.extractItem(0, 1, false), RecipeType.SMELTING);
+                pBlockEntity.maxFuelTime = (int)(ForgeHooks.getBurnTime(pBlockEntity.itemHandler.extractItem(0, 1, false), RecipeType.SMELTING) * pBlockEntity.fuelEfficiency);
                 pBlockEntity.fuelTime = pBlockEntity.maxFuelTime;
             }
         }

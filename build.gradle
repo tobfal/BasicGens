@@ -168,6 +168,9 @@ dependencies {
     runtimeOnly fg.deobf("blusunrize.immersiveengineering:ImmersiveEngineering:1.18.1-7.0.1-144.34")
 
     runtimeOnly fg.deobf("curse.maven:pipez-443900:3569514")
+
+    runtimeOnly fg.deobf("curse.maven:ShetiPhianCore-71738:3574807")
+    runtimeOnly fg.deobf("curse.maven:ShetiPhianCore-59613:3574810")
 }
 
 // Example for how to get properties into the manifest for reading at runtime.

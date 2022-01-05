@@ -1,6 +1,7 @@
 package de.tobfal.basicgens.init;
 
 import de.tobfal.basicgens.BasicGens;
+import de.tobfal.basicgens.block.menu.FluidGeneratorMenu;
 import de.tobfal.basicgens.block.menu.GeneratorMenu;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
@@ -17,6 +18,7 @@ public class ModMenuTypes {
     // Register MenuTypes
 
     public static final RegistryObject<MenuType<GeneratorMenu>> GENERATOR_MENU = registerMenuType(GeneratorMenu::new, "generator_menu");
+    public static final RegistryObject<MenuType<FluidGeneratorMenu>> FLUID_GENERATOR_MENU = registerMenuType(FluidGeneratorMenu::new, "fluid_generator_menu");
 
     //----------------
 

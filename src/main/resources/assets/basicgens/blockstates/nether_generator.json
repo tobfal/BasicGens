@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": { "model": "basicgens:block/nether_generator" }
+  }
+}

@@ -3,24 +3,19 @@ package de.tobfal.basicgens.screen;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.tobfal.basicgens.BasicGens;
-import de.tobfal.basicgens.block.menu.GeneratorMenu;
-import net.minecraft.client.Minecraft;
+import de.tobfal.basicgens.block.menu.FluidGeneratorMenu;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.fluids.FluidStack;
 
-public class GeneratorScreen extends AbstractContainerScreen<GeneratorMenu> {
+public class FluidGeneratorScreen extends AbstractContainerScreen<FluidGeneratorMenu> {
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation(BasicGens.MOD_ID, "textures/gui/generator_gui.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(BasicGens.MOD_ID, "textures/gui/fluid_generator_gui.png");
 
-    public GeneratorScreen(GeneratorMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
+    public FluidGeneratorScreen(FluidGeneratorMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
     }
 
@@ -41,10 +36,12 @@ public class GeneratorScreen extends AbstractContainerScreen<GeneratorMenu> {
         this.blit(pPoseStack, x, y, 0, 0, imageWidth, imageHeight);
 
         int energy = menu.getScaledEnergy();
-        int fuelProgress = menu.getScaledFuelProgress();
+        int fluid = menu.getScaledFluid();
 
         this.blit(pPoseStack, x + 156, y + 11 + 64 - energy, 176, 64 - energy, 8, energy);
-        this.blit(pPoseStack, x + 81, y + 54 + 14 - fuelProgress, 176, 64 + 14 - fuelProgress, 14, fuelProgress);
+
+        //TODO: Proper FLUID render
+        this.blit(pPoseStack, x + 72, y + 11 + 64 - fluid, 176, 64 + 64 - fluid, 64, fluid);
     }
 
     @Override
