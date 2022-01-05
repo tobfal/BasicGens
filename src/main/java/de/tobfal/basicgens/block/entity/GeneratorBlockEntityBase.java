@@ -2,7 +2,6 @@ package de.tobfal.basicgens.block.entity;
 
 import de.tobfal.basicgens.energy.ModEnergyStorage;
 import de.tobfal.basicgens.init.ModItems;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -14,7 +13,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -22,13 +20,11 @@ import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 
@@ -36,7 +32,7 @@ public abstract class GeneratorBlockEntityBase extends BlockEntity implements Me
 
     //Handlers
     private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
-    private final ItemStackHandler itemHandler = new ItemStackHandler(4) {
+    public final ItemStackHandler itemHandler = new ItemStackHandler(4) {
         @Override
         protected void onContentsChanged(int slot) {
             setChanged();
@@ -50,8 +46,8 @@ public abstract class GeneratorBlockEntityBase extends BlockEntity implements Me
         }
     };
 
-    private LazyOptional<EnergyStorage> lazyEnergyHandler = LazyOptional.empty();
-    private final ModEnergyStorage energyHandler;
+    private LazyOptional<IEnergyStorage> lazyEnergyHandler = LazyOptional.empty();
+    public final ModEnergyStorage energyHandler;
 
     protected final ContainerData data;
     public int fuelTime = 0;
@@ -71,6 +67,11 @@ public abstract class GeneratorBlockEntityBase extends BlockEntity implements Me
             @Override
             public boolean canReceive() {
                 return false;
+            }
+
+            @Override
+            protected void onEnergyChanged() {
+                setChanged();
             }
         };
 
@@ -123,7 +124,7 @@ public abstract class GeneratorBlockEntityBase extends BlockEntity implements Me
     }
 
     @Override
-    protected void saveAdditional(@NotNull CompoundTag tag) {
+    public void saveAdditional(CompoundTag tag) {
         tag.put("inventory", itemHandler.serializeNBT());
         tag.put("energy", energyHandler.serializeNBT());
         tag.putInt("fuelTime", this.fuelTime);
@@ -133,11 +134,11 @@ public abstract class GeneratorBlockEntityBase extends BlockEntity implements Me
 
     @Override
     public void load(CompoundTag nbt) {
-        super.load(nbt);
         itemHandler.deserializeNBT(nbt.getCompound("inventory"));
-        energyHandler.deserializeNBT(nbt.getCompound("energy"));
+        energyHandler.deserializeNBT(nbt.get("energy"));
         this.fuelTime = nbt.getInt("fuelTime");
         this.maxFuelTime = nbt.getInt("maxFuelTime");
+        super.load(nbt);
     }
 
     @Override

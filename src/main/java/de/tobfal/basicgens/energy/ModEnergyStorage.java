@@ -8,6 +8,21 @@ public class ModEnergyStorage extends EnergyStorage {
         super(capacity, maxTransfer);
     }
 
+    protected void onEnergyChanged() {
+    }
+
+    @Override
+    public int extractEnergy(int maxExtract, boolean simulate) {
+        onEnergyChanged();
+        return super.extractEnergy(maxExtract, simulate);
+    }
+
+    @Override
+    public int receiveEnergy(int maxReceive, boolean simulate) {
+        onEnergyChanged();
+        return super.receiveEnergy(maxReceive, simulate);
+    }
+
     /**
      * Ignores this.maxRecieve and canRecieve()
      */
@@ -15,6 +30,7 @@ public class ModEnergyStorage extends EnergyStorage {
         int energyReceived = Math.min(capacity - energy, maxReceive);
         if (!simulate)
             energy += energyReceived;
+        onEnergyChanged();
         return energyReceived;
     }
 
@@ -23,6 +39,7 @@ public class ModEnergyStorage extends EnergyStorage {
         int energyExtracted = Math.min(energy, Math.min(this.maxExtract, maxExtract));
         if (!simulate)
             energy -= energyExtracted;
+        onEnergyChanged();
         return energyExtracted;
     }
 

@@ -27,7 +27,12 @@ public abstract class FluidGeneratorBlockEntityBase extends BlockEntity implemen
     private final ModEnergyStorage energyHandler;
 
     private LazyOptional<FluidTank> lazyFluidHandler = LazyOptional.empty();
-    private final FluidTank fluidHandler = new FluidTank(5000);
+    private final FluidTank fluidHandler = new FluidTank(5000){
+        @Override
+        protected void onContentsChanged() {
+            setChanged();
+        }
+    };
 
     protected final ContainerData data;
     public double fuelEfficiency;
@@ -45,6 +50,11 @@ public abstract class FluidGeneratorBlockEntityBase extends BlockEntity implemen
             @Override
             public boolean canReceive() {
                 return false;
+            }
+
+            @Override
+            protected void onEnergyChanged() {
+                setChanged();
             }
         };
 
@@ -102,7 +112,7 @@ public abstract class FluidGeneratorBlockEntityBase extends BlockEntity implemen
     @Override
     public void load(@NotNull CompoundTag nbt) {
         super.load(nbt);
-        energyHandler.deserializeNBT(nbt.getCompound("energy"));
+        energyHandler.deserializeNBT(nbt.get("energy"));
         fluidHandler.readFromNBT(nbt);
     }
 
