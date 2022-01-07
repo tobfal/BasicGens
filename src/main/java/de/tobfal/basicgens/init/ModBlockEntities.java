@@ -1,9 +1,7 @@
 package de.tobfal.basicgens.init;
 
 import de.tobfal.basicgens.BasicGens;
-import de.tobfal.basicgens.block.entity.IronGeneratorBlockEntity;
-import de.tobfal.basicgens.block.entity.NetherGeneratorBlockEntity;
-import de.tobfal.basicgens.block.entity.StoneGeneratorBlockEntity;
+import de.tobfal.basicgens.block.entity.*;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
@@ -21,8 +19,14 @@ public class ModBlockEntities {
     public static final RegistryObject<BlockEntityType<IronGeneratorBlockEntity>> IRON_GENERATOR = BLOCK_ENTITIES.register("iron_generator",
             () -> BlockEntityType.Builder.of(IronGeneratorBlockEntity::new, ModBlocks.IRON_GENERATOR.get()).build(null));
 
+    public static final RegistryObject<BlockEntityType<GoldGeneratorBlockEntity>> GOLD_GENERATOR = BLOCK_ENTITIES.register("gold_generator",
+            () -> BlockEntityType.Builder.of(GoldGeneratorBlockEntity::new, ModBlocks.GOLD_GENERATOR.get()).build(null));
+
     public static final RegistryObject<BlockEntityType<NetherGeneratorBlockEntity>> NETHER_GENERATOR = BLOCK_ENTITIES.register("nether_generator",
             () -> BlockEntityType.Builder.of(NetherGeneratorBlockEntity::new, ModBlocks.NETHER_GENERATOR.get()).build(null));
+
+    public static final RegistryObject<BlockEntityType<GlowstoneGeneratorBlockEntity>> GLOWSTONE_GENERATOR = BLOCK_ENTITIES.register("glowstone_generator",
+            () -> BlockEntityType.Builder.of(GlowstoneGeneratorBlockEntity::new, ModBlocks.GLOWSTONE_GENERATOR.get()).build(null));
 
     //----------------
 

@@ -12,16 +12,16 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
 import org.jetbrains.annotations.Nullable;
 
-public class NetherGeneratorBlockEntity extends FluidGeneratorBlockEntityBase {
+public class GlowstoneGeneratorBlockEntity extends FluidGeneratorBlockEntityBase {
 
-    public NetherGeneratorBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
-        super(ModBlockEntities.NETHER_GENERATOR.get(), pWorldPosition, pBlockState, Fluids.LAVA, Config.NETHER_GENERATOR_EFFICIENCY.get(),
-                Config.NETHER_GENERATOR_CAPACITY.get(), Config.NETHER_GENERATOR_PERTICK.get(), Config.NETHER_GENERATOR_TRANSFER.get());
+    public GlowstoneGeneratorBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
+        super(ModBlockEntities.GLOWSTONE_GENERATOR.get(), pWorldPosition, pBlockState, Fluids.LAVA, Config.GLOWSTONE_GENERATOR_EFFICIENCY.get(),
+                Config.GLOWSTONE_GENERATOR_CAPACITY.get(), Config.GLOWSTONE_GENERATOR_PERTICK.get(), Config.GLOWSTONE_GENERATOR_TRANSFER.get());
     }
 
     @Override
     public Component getDisplayName() {
-        return new TextComponent("Nether Generator");
+        return new TextComponent("Glowstone Generator");
     }
 
     @Nullable

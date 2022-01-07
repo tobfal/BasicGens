@@ -57,7 +57,7 @@ public class FluidGeneratorMenu extends AbstractContainerMenu {
     public int getScaledFluid() {
         int fluidAmmount = this.data.get(0);
         int fluidCapacity = this.data.get(1);
-        int fluidBarSize = 64;
+        int fluidBarSize = 59;
 
         return fluidCapacity == 0 ? 0 : (int)((float)fluidBarSize * (float)fluidAmmount / (float)fluidCapacity);
     }

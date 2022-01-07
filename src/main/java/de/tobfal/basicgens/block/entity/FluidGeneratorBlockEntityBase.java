@@ -1,6 +1,7 @@
 package de.tobfal.basicgens.block.entity;
 
 import de.tobfal.basicgens.energy.ModEnergyStorage;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -10,16 +11,20 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
+import java.util.function.Predicate;
 
 public abstract class FluidGeneratorBlockEntityBase extends BlockEntity implements MenuProvider {
 
@@ -39,11 +44,11 @@ public abstract class FluidGeneratorBlockEntityBase extends BlockEntity implemen
 
     public int energyPerTick;
 
-    public FluidGeneratorBlockEntityBase(BlockEntityType<?> type, BlockPos pWorldPosition, BlockState pBlockState, double fuelEfficiency, int capacity, int energyPerTick) {
-        this(type, pWorldPosition, pBlockState, fuelEfficiency, capacity, energyPerTick, energyPerTick);
+    public FluidGeneratorBlockEntityBase(BlockEntityType<?> type, BlockPos pWorldPosition, BlockState pBlockState, Fluid validFluid, double fuelEfficiency, int capacity, int energyPerTick) {
+        this(type, pWorldPosition, pBlockState, validFluid, fuelEfficiency, capacity, energyPerTick, energyPerTick);
     }
 
-    public FluidGeneratorBlockEntityBase(BlockEntityType<?> type, BlockPos pWorldPosition, BlockState pBlockState, double fuelEfficiency, int capacity, int energyPerTick, int maxTransfer) {
+    public FluidGeneratorBlockEntityBase(BlockEntityType<?> type, BlockPos pWorldPosition, BlockState pBlockState, Fluid validFluid, double fuelEfficiency, int capacity, int energyPerTick, int maxTransfer) {
         super(type, pWorldPosition, pBlockState);
 
         this.energyHandler = new ModEnergyStorage(capacity, maxTransfer){
@@ -57,6 +62,8 @@ public abstract class FluidGeneratorBlockEntityBase extends BlockEntity implemen
                 setChanged();
             }
         };
+
+        this.fluidHandler.setValidator(fluidStack -> fluidStack.getFluid() == validFluid);
 
         this.energyPerTick = energyPerTick;
         this.fuelEfficiency = fuelEfficiency;
@@ -127,6 +134,8 @@ public abstract class FluidGeneratorBlockEntityBase extends BlockEntity implemen
 
         pBlockEntity.outputEnergy(pBlockEntity);
         if(pBlockEntity.fluidHandler.isEmpty()) return;
+        boolean canInsertEnergy = pBlockEntity.energyHandler.getMaxEnergyStored() - pBlockEntity.energyHandler.getEnergyStored() >= pBlockEntity.energyPerTick;
+        if(!canInsertEnergy) return;
 
         pBlockEntity.fluidHandler.drain(1, IFluidHandler.FluidAction.EXECUTE);
         pBlockEntity.energyHandler.receiveEnergyIntern(pBlockEntity.energyPerTick, false);
