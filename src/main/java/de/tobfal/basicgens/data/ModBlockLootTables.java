@@ -13,6 +13,7 @@ public class ModBlockLootTables extends BlockLoot {
         this.dropSelf(ModBlocks.IRON_GENERATOR.get());
         this.dropSelf(ModBlocks.GOLD_GENERATOR.get());
         this.dropSelf(ModBlocks.NETHER_GENERATOR.get());
+        this.dropSelf(ModBlocks.GLOWSTONE_GENERATOR.get());
 
     }
 

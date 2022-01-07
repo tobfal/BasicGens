@@ -6,6 +6,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
@@ -42,6 +43,11 @@ public class FluidGeneratorMenu extends AbstractContainerMenu {
     }
 
     @Override
+    public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
+        return ItemStack.EMPTY;
+    }
+
+    @Override
     public boolean stillValid(Player pPlayer) {
         return stillValid(ContainerLevelAccess.create(level, blockEntity.getBlockPos()), pPlayer, blockEntity.getBlockState().getBlock());
     }
@@ -51,7 +57,7 @@ public class FluidGeneratorMenu extends AbstractContainerMenu {
         int maxEnergy = this.data.get(3);
         int energyBarSize = 64;
 
-        return maxEnergy == 0 ? 0 : (int)((float)energyBarSize * (float)energy / (float)maxEnergy);
+        return maxEnergy == 0 ? 0 : Math.round((float)energyBarSize * (float)energy / (float)maxEnergy);
     }
 
     public int getScaledFluid() {
@@ -59,7 +65,7 @@ public class FluidGeneratorMenu extends AbstractContainerMenu {
         int fluidCapacity = this.data.get(1);
         int fluidBarSize = 59;
 
-        return fluidCapacity == 0 ? 0 : (int)((float)fluidBarSize * (float)fluidAmmount / (float)fluidCapacity);
+        return fluidCapacity == 0 ? 0 : Math.round((float)fluidBarSize * (float)fluidAmmount / (float)fluidCapacity);
     }
 
     public int getEnergy(){

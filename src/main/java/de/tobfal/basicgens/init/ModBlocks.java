@@ -21,19 +21,19 @@ public class ModBlocks {
     // Register Blocks
 
     public static final RegistryObject<Block> STONE_GENERATOR = registerBlock("stone_generator",
-            () -> new StoneGeneratorBlock(BlockBehaviour.Properties.of(Material.METAL).noOcclusion()), CreativeModeTab.TAB_MISC);
+            () -> new StoneGeneratorBlock(BlockBehaviour.Properties.of(Material.METAL).strength(3f).noOcclusion()), ModCreativeTab.BASICGENS_TAB);
 
     public static final RegistryObject<Block> IRON_GENERATOR = registerBlock("iron_generator",
-            () -> new IronGeneratorBlock(BlockBehaviour.Properties.of(Material.METAL).noOcclusion()), CreativeModeTab.TAB_MISC);
+            () -> new IronGeneratorBlock(BlockBehaviour.Properties.of(Material.METAL).strength(3f).noOcclusion()), ModCreativeTab.BASICGENS_TAB);
 
     public static final RegistryObject<Block> GOLD_GENERATOR = registerBlock("gold_generator",
-            () -> new GoldGeneratorBlock(BlockBehaviour.Properties.of(Material.METAL).noOcclusion()), CreativeModeTab.TAB_MISC);
+            () -> new GoldGeneratorBlock(BlockBehaviour.Properties.of(Material.METAL).strength(3f).noOcclusion()), ModCreativeTab.BASICGENS_TAB);
 
     public static final RegistryObject<Block> NETHER_GENERATOR = registerBlock("nether_generator",
-            () -> new NetherGeneratorBlock(BlockBehaviour.Properties.of(Material.METAL).noOcclusion()), CreativeModeTab.TAB_MISC);
+            () -> new NetherGeneratorBlock(BlockBehaviour.Properties.of(Material.METAL).strength(3f).noOcclusion()), ModCreativeTab.BASICGENS_TAB);
 
     public static final RegistryObject<Block> GLOWSTONE_GENERATOR = registerBlock("glowstone_generator",
-            () -> new GlowstoneGeneratorBlock(BlockBehaviour.Properties.of(Material.METAL).noOcclusion()), CreativeModeTab.TAB_MISC);
+            () -> new GlowstoneGeneratorBlock(BlockBehaviour.Properties.of(Material.METAL).strength(3f).noOcclusion()), ModCreativeTab.BASICGENS_TAB);
 
     //----------------
 

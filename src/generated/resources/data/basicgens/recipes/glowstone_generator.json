@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SSS",
+    "SGS",
+    "BBB"
+  ],
+  "key": {
+    "G": {
+      "item": "basicgens:nether_generator"
+    },
+    "S": {
+      "item": "minecraft:glowstone"
+    },
+    "B": {
+      "item": "minecraft:gold_block"
+    }
+  },
+  "result": {
+    "item": "basicgens:glowstone_generator"
+  }
+}

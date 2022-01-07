@@ -62,6 +62,8 @@ public class FluidGeneratorScreen extends AbstractContainerScreen<FluidGenerator
         int x = mouseX - (width - imageWidth) / 2;
         int y = mouseY - (height - imageHeight) / 2;
         if(x > 155 && x < 164 && y > 10 && y < 75)
-            renderTooltip(pPoseStack, new TextComponent(String.format("%.1fkRF/%.0fkRF", menu.getEnergy()/1000f, menu.getMaxEnergy()/1000f)), mouseX, mouseY);
+            renderTooltip(pPoseStack, new TextComponent(String.format("%.1f kRF/%.0f kRF", menu.getEnergy()/1000f, menu.getMaxEnergy()/1000f)), mouseX, mouseY);
+        if(x > 71 && x < 105 && y > 15 && y < 75)
+            renderTooltip(pPoseStack, new TextComponent(String.format("%d mB/%d mB", menu.getFluidAmmount(), menu.getFluidCapacity())), mouseX, mouseY);
     }
 }

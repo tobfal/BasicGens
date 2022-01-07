@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "NNN",
+    "NGN",
+    "BLB"
+  ],
+  "key": {
+    "G": {
+      "item": "basicgens:stone_generator"
+    },
+    "N": {
+      "item": "minecraft:nether_bricks"
+    },
+    "B": {
+      "item": "minecraft:gold_block"
+    },
+    "L": {
+      "item": "minecraft:lava_bucket"
+    }
+  },
+  "result": {
+    "item": "basicgens:nether_generator"
+  }
+}

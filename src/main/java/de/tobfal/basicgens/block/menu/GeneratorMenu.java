@@ -1,6 +1,7 @@
 package de.tobfal.basicgens.block.menu;
 
 import de.tobfal.basicgens.block.entity.GeneratorBlockEntityBase;
+import de.tobfal.basicgens.init.ModItems;
 import de.tobfal.basicgens.init.ModMenuTypes;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -27,7 +28,7 @@ public class GeneratorMenu extends AbstractContainerMenu {
 
     public GeneratorMenu(int windowId, Inventory inv, BlockEntity entity, ContainerData data) {
         super(ModMenuTypes.GENERATOR_MENU.get(), windowId);
-        checkContainerSize(inv, 4);
+        checkContainerSize(inv, 2);
 
         blockEntity = ((GeneratorBlockEntityBase) entity);
         this.level = inv.player.level;
@@ -50,9 +51,7 @@ public class GeneratorMenu extends AbstractContainerMenu {
             blockEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h -> {
                 addSlot(new SlotItemHandler(h, 0, 80,35));
 
-                addSlot(new SlotItemHandler(h, 1, 26,17));
-                addSlot(new SlotItemHandler(h, 2, 26,35));
-                addSlot(new SlotItemHandler(h, 3, 26,53));
+                addSlot(new SlotItemHandler(h, 1, 26,35));
             });
         }
 
@@ -67,11 +66,17 @@ public class GeneratorMenu extends AbstractContainerMenu {
         ItemStack copyOfSourceStack = sourceStack.copy();
 
         if (pIndex < 36) {
-            if(ForgeHooks.getBurnTime(sourceStack, RecipeType.SMELTING) <= 0 || sourceStack.getItem() == Items.LAVA_BUCKET) return ItemStack.EMPTY;
-            if (!moveItemStackTo(sourceStack, 36, 37, false)) {
-                return ItemStack.EMPTY;
+            if(sourceStack.getItem() == ModItems.CONTROLLER_AUGMENT.get()){
+                if (!moveItemStackTo(sourceStack, 37, 38, false)) {
+                    return ItemStack.EMPTY;
+                }
+            } else {
+                if(ForgeHooks.getBurnTime(sourceStack, RecipeType.SMELTING) <= 0 || sourceStack.getItem() == Items.LAVA_BUCKET) return ItemStack.EMPTY;
+                if (!moveItemStackTo(sourceStack, 36, 37, false)) {
+                    return ItemStack.EMPTY;
+                }
             }
-        } else if (pIndex < 37) {
+        } else if (pIndex < 38) {
             if (!moveItemStackTo(sourceStack, 0, 36, false)) {
                 return ItemStack.EMPTY;
             }
@@ -98,7 +103,7 @@ public class GeneratorMenu extends AbstractContainerMenu {
         int maxEnergy = this.data.get(3);
         int energyBarSize = 64;
 
-        return maxEnergy == 0 ? 0 : (int)((float)energyBarSize * (float)energy / (float)maxEnergy);
+        return maxEnergy == 0 ? 0 : Math.round((float)energyBarSize * (float)energy / (float)maxEnergy);
     }
 
     public int getScaledFuelProgress() {
@@ -106,7 +111,7 @@ public class GeneratorMenu extends AbstractContainerMenu {
         int maxFuelProgress = this.data.get(1);
         int fuelProgressSize = 14;
 
-        return maxFuelProgress == 0 ? 0 : (int)((float)fuelProgressSize * (float)fuelProgress / (float)maxFuelProgress);
+        return maxFuelProgress == 0 ? 0 : Math.round((float)fuelProgressSize * (float)fuelProgress / (float)maxFuelProgress);
     }
 
     public int getEnergy(){

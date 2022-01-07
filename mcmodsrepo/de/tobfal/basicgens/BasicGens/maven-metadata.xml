@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>de.tobfal.basicgens</groupId>
+  <artifactId>BasicGens</artifactId>
+  <versioning>
+    <latest>1.18.1-0.1.0</latest>
+    <release>1.18.1-0.1.0</release>
+    <versions>
+      <version>1.18.1-0.1.0</version>
+    </versions>
+    <lastUpdated>20220107034937</lastUpdated>
+  </versioning>
+</metadata>

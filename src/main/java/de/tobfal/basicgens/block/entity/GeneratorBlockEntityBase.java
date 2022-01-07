@@ -32,7 +32,7 @@ public abstract class GeneratorBlockEntityBase extends BlockEntity implements Me
 
     //Handlers
     private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
-    public final ItemStackHandler itemHandler = new ItemStackHandler(4) {
+    public final ItemStackHandler itemHandler = new ItemStackHandler(2) {
         @Override
         protected void onContentsChanged(int slot) {
             setChanged();
@@ -41,7 +41,8 @@ public abstract class GeneratorBlockEntityBase extends BlockEntity implements Me
         @NotNull
         @Override
         public ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
-            if(slot == 0 && ForgeHooks.getBurnTime(stack, RecipeType.SMELTING) <= 0 && stack.getItem() != Items.LAVA_BUCKET) return stack;
+            if(slot == 0 && (ForgeHooks.getBurnTime(stack, RecipeType.SMELTING) <= 0 || stack.getItem() == Items.LAVA_BUCKET)) return stack;
+            if(slot == 1 && stack.getItem() != ModItems.CONTROLLER_AUGMENT.get()) return stack;
             return super.insertItem(slot, stack, simulate);
         }
     };

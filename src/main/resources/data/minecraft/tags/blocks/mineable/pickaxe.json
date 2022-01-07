@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "basicgens:stone_generator",
+    "basicgens:iron_generator",
+    "basicgens:gold_generator",
+    "basicgens:nether_generator",
+    "basicgens:glowstone_generator"
+  ]
+}

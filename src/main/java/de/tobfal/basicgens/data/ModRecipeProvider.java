@@ -1,6 +1,7 @@
 package de.tobfal.basicgens.data;
 
 import de.tobfal.basicgens.init.ModBlocks;
+import de.tobfal.basicgens.init.ModItems;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
@@ -18,6 +19,21 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
 
     @Override
     protected void buildCraftingRecipes(Consumer<FinishedRecipe> pFinishedRecipeConsumer) {
+
+        //Items
+        ShapedRecipeBuilder.shaped(ModItems.CONTROLLER_AUGMENT.get())
+                .define('D', Items.DIAMOND)
+                .define('L', Items.LEVER)
+                .define('R', Items.REDSTONE_BLOCK)
+                .define('I', Items.IRON_INGOT)
+                .pattern("IRI")
+                .pattern("RDR")
+                .pattern("ILI")
+                .unlockedBy("has_material", has(ModBlocks.STONE_GENERATOR.get().asItem()))
+                .save(pFinishedRecipeConsumer);
+        //----------------
+
+        //Blocks
         ShapedRecipeBuilder.shaped(ModBlocks.STONE_GENERATOR.get())
                 .define('F', Items.FURNACE)
                 .define('G', Items.GUNPOWDER)
@@ -53,14 +69,25 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
 
         ShapedRecipeBuilder.shaped(ModBlocks.NETHER_GENERATOR.get())
                 .define('G', ModBlocks.STONE_GENERATOR.get().asItem())
-                .define('B', Items.NETHER_BRICKS)
-                .define('S', Items.GLOWSTONE)
+                .define('N', Items.NETHER_BRICKS)
+                .define('B', Items.GOLD_BLOCK)
                 .define('L', Items.LAVA_BUCKET)
-                .pattern("BBB")
-                .pattern("BGB")
-                .pattern("SLS")
+                .pattern("NNN")
+                .pattern("NGN")
+                .pattern("BLB")
                 .unlockedBy("has_material", has(ModBlocks.STONE_GENERATOR.get().asItem()))
                 .save(pFinishedRecipeConsumer);
+
+        ShapedRecipeBuilder.shaped(ModBlocks.GLOWSTONE_GENERATOR.get())
+                .define('G', ModBlocks.NETHER_GENERATOR.get().asItem())
+                .define('S', Items.GLOWSTONE)
+                .define('B', Items.GOLD_BLOCK)
+                .pattern("SSS")
+                .pattern("SGS")
+                .pattern("BBB")
+                .unlockedBy("has_material", has(ModBlocks.NETHER_GENERATOR.get().asItem()))
+                .save(pFinishedRecipeConsumer);
+        //----------------
     }
 
 }
