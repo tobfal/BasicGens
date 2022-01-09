@@ -18,7 +18,7 @@ apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 apply plugin: 'org.spongepowered.mixin'
 
-version = '1.18.1-0.1.0'
+version = '1.18.1-0.1.1'
 group = 'de.tobfal.basicgens' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'basicgens'
 
