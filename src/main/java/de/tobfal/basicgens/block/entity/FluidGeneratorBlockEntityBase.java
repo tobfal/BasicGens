@@ -2,11 +2,22 @@ package de.tobfal.basicgens.block.entity;
 
 import de.tobfal.basicgens.energy.ModEnergyStorage;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.sounds.Sound;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.item.BucketItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -158,6 +169,19 @@ public abstract class FluidGeneratorBlockEntityBase extends BlockEntity implemen
                 if(!doContinue) return;
             }
         }
+    }
+
+    public void onBucketInteraction(Player pPlayer, InteractionHand pHand, FluidGeneratorBlockEntityBase pBlockEntity, Fluid pFluid){
+        if(pBlockEntity.fluidHandler.getCapacity() - pBlockEntity.fluidHandler.getFluidAmount() < 1000) return;
+        FluidStack bucketFluidStack = new FluidStack(pFluid, 1000);
+        if(!pBlockEntity.fluidHandler.isFluidValid(bucketFluidStack)) return;
+        pBlockEntity.fluidHandler.fill(bucketFluidStack, IFluidHandler.FluidAction.EXECUTE);
+        if(pFluid == Fluids.LAVA) {
+            pPlayer.playNotifySound(SoundEvents.BUCKET_EMPTY_LAVA, SoundSource.BLOCKS,1.0f, 1.0f);
+        } else {
+            pPlayer.playNotifySound(SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS,1.0f, 1.0f);
+        }
+        pPlayer.setItemInHand(pHand, new ItemStack(Items.BUCKET));
     }
 }
 

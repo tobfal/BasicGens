@@ -18,7 +18,7 @@ apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 apply plugin: 'org.spongepowered.mixin'
 
-version = '1.18.1-0.1.1'
+version = '1.18.1-0.1.2'
 group = 'de.tobfal.basicgens' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'basicgens'
 
@@ -150,11 +150,11 @@ dependencies {
     // Specify the version of Minecraft to use. If this is any group other than 'net.minecraft', it is assumed
     // that the dep is a ForgeGradle 'patcher' dependency, and its patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
-    minecraft 'net.minecraftforge:forge:1.18.1-39.0.10'
+    minecraft 'net.minecraftforge:forge:1.18.1-39.0.36'
 
     // Real mod deobf dependency examples - these get remapped to your current mappings
-    compileOnly fg.deobf("mezz.jei:jei-1.18.1:9.1.2.50:api") // Adds JEI API as a compile dependency
-    runtimeOnly fg.deobf("mezz.jei:jei-1.18.1:9.1.2.50") // Adds the full JEI mod as a runtime dependency
+    compileOnly fg.deobf("mezz.jei:jei-1.18.1:9.2.3.78:api") // Adds JEI API as a compile dependency
+    runtimeOnly fg.deobf("mezz.jei:jei-1.18.1:9.2.3.78") // Adds the full JEI mod as a runtime dependency
     // implementation fg.deobf("com.tterrag.registrate:Registrate:MC${mc_version}-${registrate_version}") // Adds registrate as a dependency
 
     // Examples using mod jars from ./libs
@@ -165,12 +165,9 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
-    runtimeOnly fg.deobf("blusunrize.immersiveengineering:ImmersiveEngineering:1.18.1-7.0.1-144.34")
+    runtimeOnly fg.deobf("blusunrize.immersiveengineering:ImmersiveEngineering:1.18.1-7.1.0-145")
 
     runtimeOnly fg.deobf("curse.maven:pipez-443900:3569514")
-
-    runtimeOnly fg.deobf("curse.maven:ShetiPhianCore-71738:3574807")
-    runtimeOnly fg.deobf("curse.maven:ShetiPhianCore-59613:3574810")
 }
 
 // Example for how to get properties into the manifest for reading at runtime.
