@@ -5,7 +5,6 @@ import de.tobfal.basicgens.init.Config;
 import de.tobfal.basicgens.init.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
@@ -21,7 +20,7 @@ public class NetherGeneratorBlockEntity extends FluidGeneratorBlockEntityBase {
 
     @Override
     public Component getDisplayName() {
-        return new TextComponent("Nether Generator");
+        return Component.literal("Nether Generator");
     }
 
     @Nullable

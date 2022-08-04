@@ -1,24 +1,24 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "IRI",
-    "RDR",
-    "ILI"
-  ],
   "key": {
     "D": {
       "item": "minecraft:diamond"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
     },
     "L": {
       "item": "minecraft:lever"
     },
     "R": {
       "item": "minecraft:redstone_block"
-    },
-    "I": {
-      "item": "minecraft:iron_ingot"
     }
   },
+  "pattern": [
+    "IRI",
+    "RDR",
+    "ILI"
+  ],
   "result": {
     "item": "basicgens:controller_augment"
   }

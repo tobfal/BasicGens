@@ -3,8 +3,6 @@ package de.tobfal.basicgens.init;
 import de.tobfal.basicgens.BasicGens;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -28,9 +26,9 @@ public class ModItems {
                 @Override
                 public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
                     if(Screen.hasShiftDown()) {
-                        pTooltipComponents.add(new TranslatableComponent("tooltip.basicgens.controller_augment.shift"));
+                        pTooltipComponents.add(Component.translatable("tooltip.basicgens.controller_augment.shift"));
                     } else {
-                        pTooltipComponents.add(new TranslatableComponent("tooltip.basicgens.controller_augment"));
+                        pTooltipComponents.add(Component.translatable("tooltip.basicgens.controller_augment"));
                     }
                 }
             });

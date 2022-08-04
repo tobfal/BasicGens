@@ -1,10 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "SSS",
-    "SPS",
-    "GFG"
-  ],
   "key": {
     "F": {
       "item": "minecraft:furnace"
@@ -19,6 +14,11 @@
       "item": "minecraft:stone"
     }
   },
+  "pattern": [
+    "SSS",
+    "SPS",
+    "GFG"
+  ],
   "result": {
     "item": "basicgens:stone_generator"
   }

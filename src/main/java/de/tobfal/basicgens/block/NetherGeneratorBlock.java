@@ -71,7 +71,7 @@ public class NetherGeneratorBlock extends BaseEntityBlock {
                 if(pPlayer.getMainHandItem().getItem() == Items.LAVA_BUCKET) {
                     entity.onBucketInteraction(pPlayer, pHand, entity, Fluids.LAVA);
                 } else {
-                    NetworkHooks.openGui(((ServerPlayer) pPlayer), entity, pPos);
+                    NetworkHooks.openScreen(((ServerPlayer) pPlayer), entity, pPos);
                 }
             } else {
                 throw new IllegalStateException("Container provider is missing!");

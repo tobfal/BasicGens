@@ -1,24 +1,24 @@
 {
   "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": {
+      "item": "minecraft:gold_block"
+    },
+    "G": {
+      "item": "basicgens:iron_generator"
+    },
+    "P": {
+      "item": "minecraft:gunpowder"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
   "pattern": [
     "BBB",
     "BGB",
     "RPR"
   ],
-  "key": {
-    "G": {
-      "item": "basicgens:iron_generator"
-    },
-    "B": {
-      "item": "minecraft:gold_block"
-    },
-    "R": {
-      "item": "minecraft:redstone"
-    },
-    "P": {
-      "item": "minecraft:gunpowder"
-    }
-  },
   "result": {
     "item": "basicgens:gold_generator"
   }

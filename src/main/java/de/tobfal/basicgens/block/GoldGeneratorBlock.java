@@ -67,7 +67,7 @@ public class GoldGeneratorBlock extends BaseEntityBlock {
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         if (!pLevel.isClientSide()) {
             if(pLevel.getBlockEntity(pPos) instanceof GoldGeneratorBlockEntity entity) {
-                NetworkHooks.openGui(((ServerPlayer)pPlayer), entity, pPos);
+                NetworkHooks.openScreen(((ServerPlayer)pPlayer), entity, pPos);
             } else {
                 throw new IllegalStateException("Container provider is missing!");
             }

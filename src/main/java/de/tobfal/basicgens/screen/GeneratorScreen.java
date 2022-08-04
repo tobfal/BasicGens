@@ -4,17 +4,11 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.tobfal.basicgens.BasicGens;
 import de.tobfal.basicgens.block.menu.GeneratorMenu;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.fluids.FluidStack;
 
 public class GeneratorScreen extends AbstractContainerScreen<GeneratorMenu> {
 
@@ -56,6 +50,6 @@ public class GeneratorScreen extends AbstractContainerScreen<GeneratorMenu> {
         int x = mouseX - (width - imageWidth) / 2;
         int y = mouseY - (height - imageHeight) / 2;
         if(x > 155 && x < 164 && y > 10 && y < 75)
-            renderTooltip(pPoseStack, new TextComponent(String.format("%.1f kRF/%.0f kRF", menu.getEnergy()/1000f, menu.getMaxEnergy()/1000f)), mouseX, mouseY);
+            renderTooltip(pPoseStack, Component.literal(String.format("%.1f kRF/%.0f kRF", menu.getEnergy()/1000f, menu.getMaxEnergy()/1000f)), mouseX, mouseY);
     }
 }
