@@ -2,14 +2,19 @@ package de.tobfal.basicgens.block;
 
 import de.tobfal.basicgens.block.entity.GeneratorBlockEntityBase;
 import de.tobfal.basicgens.block.entity.StoneGeneratorBlockEntity;
+import de.tobfal.basicgens.init.Config;
 import de.tobfal.basicgens.init.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -26,6 +31,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.List;
 import java.util.stream.Stream;
 
 public class StoneGeneratorBlock extends BaseEntityBlock {
@@ -35,6 +42,15 @@ public class StoneGeneratorBlock extends BaseEntityBlock {
     public StoneGeneratorBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH));
+    }
+
+    @Override
+    @ParametersAreNonnullByDefault
+    public void appendHoverText(ItemStack stack, @Nullable BlockGetter blockGetter, List<Component> components, TooltipFlag tooltipFlag) {
+        components.add(Component.literal("Converts burnable items to RF power."));
+        components.add(Component.literal("Capacity: " + Config.STONE_GENERATOR_CAPACITY.get()));
+        components.add(Component.literal("RF/t: " + Config.STONE_GENERATOR_PERTICK.get()));
+        components.add(Component.literal("Output/t: " + Config.STONE_GENERATOR_TRANSFER.get()));
     }
 
     public static final VoxelShape SHAPE = Stream.of(
