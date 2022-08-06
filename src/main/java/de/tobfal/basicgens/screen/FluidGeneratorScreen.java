@@ -4,11 +4,19 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.tobfal.basicgens.BasicGens;
 import de.tobfal.basicgens.block.menu.FluidGeneratorMenu;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.level.material.EmptyFluid;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraftforge.client.event.ScreenEvent;
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.minecraftforge.fluids.FluidStack;
 
 public class FluidGeneratorScreen extends AbstractContainerScreen<FluidGeneratorMenu> {
 
@@ -37,10 +45,25 @@ public class FluidGeneratorScreen extends AbstractContainerScreen<FluidGenerator
         int energy = menu.getScaledEnergy();
         int fluid = menu.getScaledFluid();
 
+        //Render energy bar
         this.blit(pPoseStack, x + 156, y + 11 + 64 - energy, 176, 64 - energy, 8, energy);
 
-        //TODO: Proper FLUID render
-        this.blit(pPoseStack, x + 72, y + 16 + 59 - fluid, 176, 64 + 59 - fluid, 33, fluid);
+        //Render fluid bar
+        FluidStack fluidStack = new FluidStack(Fluids.LAVA.getSource(), 1);
+        ResourceLocation fluidResourceLocation = IClientFluidTypeExtensions.of(fluidStack.getFluid()).getStillTexture(fluidStack);
+        TextureAtlasSprite fluidSprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(fluidResourceLocation);
+        RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
+
+        int spritesNeeded = fluid / 16;
+        int pixelsLeft = fluid % 16;
+
+        //TODO: Proper blit scaling
+        for(int i = 0; i < spritesNeeded; i++){
+            this.blit(pPoseStack, x + 72, y + 16 + 59 - fluid + 16 * i, 0, 16, 16, fluidSprite);
+            this.blit(pPoseStack, x + 72 + 16, y + 16 + 59 - fluid + 16 * i, 0, 16, 16, fluidSprite);
+        }
+        this.blit(pPoseStack, x + 72, y + 16 + 59 - fluid + 16 * spritesNeeded, 0, 16, pixelsLeft, fluidSprite);
+        this.blit(pPoseStack, x + 72 + 16, y + 16 + 59 - fluid + 16 * spritesNeeded, 0, 16, pixelsLeft, fluidSprite);
     }
 
     @Override
