@@ -10,5 +10,12 @@
   "itemGroup.basicgenstab": "BasicGens",
 
   "tooltip.basicgens.controller_augment": "§e<SHIFT>§r",
-  "tooltip.basicgens.controller_augment.shift": "§ePrevents fuel in generators from ticking down while the energy buffer is full.§r"
+  "tooltip.basicgens.controller_augment.shift": "§ePrevents fuel in generators from ticking down while the energy buffer is full.§r",
+
+  "tooltip.basicgens.generator": "§e<SHIFT>§r",
+  "tooltip.basicgens.generator.description": "§eConverts burnable items to RF power.§r",
+  "tooltip.basicgens.generator.description.fluid": "§eConverts lava into RF power.§r",
+  "tooltip.basicgens.generator.capacity": "§cCapacity:§r",
+  "tooltip.basicgens.generator.pertick": "§cGeneration:§r",
+  "tooltip.basicgens.generator.transfer": "§cOutput:§r"
 }

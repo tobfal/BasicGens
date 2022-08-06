@@ -4,6 +4,7 @@ import de.tobfal.basicgens.block.entity.GeneratorBlockEntityBase;
 import de.tobfal.basicgens.block.entity.IronGeneratorBlockEntity;
 import de.tobfal.basicgens.init.Config;
 import de.tobfal.basicgens.init.ModBlockEntities;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -48,10 +49,14 @@ public class IronGeneratorBlock extends BaseEntityBlock {
     @Override
     @ParametersAreNonnullByDefault
     public void appendHoverText(ItemStack stack, @Nullable BlockGetter blockGetter, List<Component> components, TooltipFlag tooltipFlag) {
-        components.add(Component.literal("Converts burnable items to RF power."));
-        components.add(Component.literal("Capacity: " + Config.IRON_GENERATOR_CAPACITY.get()));
-        components.add(Component.literal("RF/t: " + Config.IRON_GENERATOR_PERTICK.get()));
-        components.add(Component.literal("Output/t: " + Config.IRON_GENERATOR_TRANSFER.get()));
+        if(Screen.hasShiftDown()) {
+            components.add(Component.translatable("tooltip.basicgens.generator.description"));
+            components.add(Component.translatable("tooltip.basicgens.generator.capacity").append(String.format(" %.0f kRF", Config.IRON_GENERATOR_CAPACITY.get()/1000f)));
+            components.add(Component.translatable("tooltip.basicgens.generator.pertick").append(" " + Config.IRON_GENERATOR_PERTICK.get() + " RF/t"));
+            components.add(Component.translatable("tooltip.basicgens.generator.transfer").append(" " + Config.IRON_GENERATOR_TRANSFER.get() + " RF/t"));
+        } else {
+            components.add(Component.translatable("tooltip.basicgens.generator"));
+        }
     }
 
     public static final VoxelShape SHAPE = Stream.of(

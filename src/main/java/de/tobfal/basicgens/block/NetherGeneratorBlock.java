@@ -3,6 +3,7 @@ package de.tobfal.basicgens.block;
 import de.tobfal.basicgens.block.entity.NetherGeneratorBlockEntity;
 import de.tobfal.basicgens.init.Config;
 import de.tobfal.basicgens.init.ModBlockEntities;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -48,10 +49,14 @@ public class NetherGeneratorBlock extends BaseEntityBlock {
     @Override
     @ParametersAreNonnullByDefault
     public void appendHoverText(ItemStack stack, @Nullable BlockGetter blockGetter, List<Component> components, TooltipFlag tooltipFlag) {
-        components.add(Component.literal("Converts hot fluids into RF power."));
-        components.add(Component.literal("Capacity: " + Config.NETHER_GENERATOR_CAPACITY.get()));
-        components.add(Component.literal("RF/t: " + Config.NETHER_GENERATOR_PERTICK.get()));
-        components.add(Component.literal("Output/t: " + Config.NETHER_GENERATOR_TRANSFER.get()));
+        if(Screen.hasShiftDown()) {
+            components.add(Component.translatable("tooltip.basicgens.generator.description.fluid"));
+            components.add(Component.translatable("tooltip.basicgens.generator.capacity").append(String.format(" %.0f kRF", Config.NETHER_GENERATOR_CAPACITY.get()/1000f)));
+            components.add(Component.translatable("tooltip.basicgens.generator.pertick").append(" " + Config.NETHER_GENERATOR_PERTICK.get() + " RF/t"));
+            components.add(Component.translatable("tooltip.basicgens.generator.transfer").append(" " + Config.NETHER_GENERATOR_TRANSFER.get() + " RF/t"));
+        } else {
+            components.add(Component.translatable("tooltip.basicgens.generator"));
+        }
     }
 
     public static final VoxelShape SHAPE = Stream.of(
