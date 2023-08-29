@@ -7,7 +7,7 @@
 
   "item.basicgens.controller_augment": "Controller Augment",
 
-  "itemGroup.basicgenstab": "BasicGens",
+  "creativetab.basicgens.basicgenstab": "BasicGens",
 
   "tooltip.basicgens.controller_augment": "§e<SHIFT>§r",
   "tooltip.basicgens.controller_augment.shift": "§ePrevents fuel in generators from ticking down while the energy buffer is full.§r",

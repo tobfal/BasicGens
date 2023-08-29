@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
 public class BasicGens
 {
     public static final String MOD_ID = "basicgens";
-
     private static final Logger LOGGER = LogManager.getLogger();
 
     public BasicGens() {
@@ -32,6 +31,7 @@ public class BasicGens
 
         ModItems.register(eventBus);
         ModBlocks.register(eventBus);
+        ModCreativeTabs.register(eventBus);
         ModBlockEntities.register(eventBus);
         ModMenuTypes.register(eventBus);
 

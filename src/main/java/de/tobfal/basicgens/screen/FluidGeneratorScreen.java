@@ -1,10 +1,10 @@
 package de.tobfal.basicgens.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import de.tobfal.basicgens.BasicGens;
 import de.tobfal.basicgens.block.menu.FluidGeneratorMenu;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -15,6 +15,7 @@ import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
+import org.jetbrains.annotations.NotNull;
 
 public class FluidGeneratorScreen extends AbstractContainerScreen<FluidGeneratorMenu> {
 
@@ -30,7 +31,7 @@ public class FluidGeneratorScreen extends AbstractContainerScreen<FluidGenerator
     }
 
     @Override
-    protected void renderBg(PoseStack pPoseStack, float pPartialTick, int pMouseX, int pMouseY) {
+    protected void renderBg(@NotNull GuiGraphics pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, TEXTURE);
@@ -42,7 +43,7 @@ public class FluidGeneratorScreen extends AbstractContainerScreen<FluidGenerator
         int fluidHeight = menu.getScaledFluid();
 
         //Render fluid bar background
-        this.blit(pPoseStack, x + 72, y + 16, 176, 64, 33, 59);
+        pGuiGraphics.blit(TEXTURE, x + 72, y + 16, 176, 64, 33, 59);
 
         //Render fluid bar
         FluidStack fluidStack = new FluidStack(Fluids.LAVA.getSource(), 1);
@@ -54,29 +55,29 @@ public class FluidGeneratorScreen extends AbstractContainerScreen<FluidGenerator
 
         for(int i = 0; i < spritesNeeded + 1; i++){
             for(int j = 0; j < 3; j++){
-                this.blit(pPoseStack, x + 72 + 16 * j, y + 16 + 59 - fluidHeight + 16 * i, 0, 16, 16, fluidSprite);
+                pGuiGraphics.blit(x + 72 + 16 * j, y + 16 + 59 - fluidHeight + 16 * i, 0, 16, 16, fluidSprite);
             }
         }
 
         //Render Screen
         RenderSystem.setShaderTexture(0, TEXTURE);
-        this.blit(pPoseStack, x, y, 0, 0, imageWidth, imageHeight);
+        pGuiGraphics.blit(TEXTURE, x, y, 0, 0, imageWidth, imageHeight);
 
         //Render energy bar
-        this.blit(pPoseStack, x + 156, y + 11 + 64 - energyHeight, 176, 64 - energyHeight, 8, energyHeight);
+        pGuiGraphics.blit(TEXTURE, x + 156, y + 11 + 64 - energyHeight, 176, 64 - energyHeight, 8, energyHeight);
     }
 
     @Override
-    public void render(PoseStack pPoseStack, int mouseX, int mouseY, float delta) {
-        renderBackground(pPoseStack);
-        super.render(pPoseStack, mouseX, mouseY, delta);
-        renderTooltip(pPoseStack, mouseX, mouseY);
+    public void render(@NotNull GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+        renderBg(pGuiGraphics, pPartialTick, pMouseX, pMouseY);
+        super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
+        renderTooltip(pGuiGraphics, pMouseX, pMouseY);
 
-        int x = mouseX - (width - imageWidth) / 2;
-        int y = mouseY - (height - imageHeight) / 2;
+        int x = pMouseX - (width - imageWidth) / 2;
+        int y = pMouseY - (height - imageHeight) / 2;
         if(x > 155 && x < 164 && y > 10 && y < 75)
-            renderTooltip(pPoseStack, Component.literal(String.format("%.1f kRF/%.0f kRF", menu.getEnergy()/1000f, menu.getMaxEnergy()/1000f)), mouseX, mouseY);
+            pGuiGraphics.renderTooltip(this.font, Component.literal(String.format("%.1f kRF/%.0f kRF", menu.getEnergy()/1000f, menu.getMaxEnergy()/1000f)), pMouseX, pMouseY);
         if(x > 71 && x < 105 && y > 15 && y < 75)
-            renderTooltip(pPoseStack, Component.literal(String.format("%d mB/%d mB", menu.getFluidAmmount(), menu.getFluidCapacity())), mouseX, mouseY);
+            pGuiGraphics.renderTooltip(this.font, Component.literal(String.format("%d mB/%d mB", menu.getFluidAmmount(), menu.getFluidCapacity())), pMouseX, pMouseY);
     }
 }

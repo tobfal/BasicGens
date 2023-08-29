@@ -18,17 +18,16 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 
-public abstract class GeneratorBlockEntityBase extends BlockEntity implements MenuProvider {
+public abstract class GeneratorBlockEntityBase extends BlockEntity implements MenuProvider, ITickableBlockEntity {
 
     //Handlers
     private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
@@ -109,9 +108,9 @@ public abstract class GeneratorBlockEntityBase extends BlockEntity implements Me
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @javax.annotation.Nullable Direction side) {
-        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+        if (cap == ForgeCapabilities.ITEM_HANDLER)
             return lazyItemHandler.cast();
-        if (cap == CapabilityEnergy.ENERGY)
+        if (cap == ForgeCapabilities.ENERGY)
             return lazyEnergyHandler.cast();
 
         return super.getCapability(cap, side);
@@ -157,28 +156,27 @@ public abstract class GeneratorBlockEntityBase extends BlockEntity implements Me
         Containers.dropContents(this.level, this.worldPosition, inventory);
     }
 
-    public static void tick(Level pLevel, BlockPos pPos, BlockState pState, GeneratorBlockEntityBase pBlockEntity) {
+    public void tick() {
+        this.outputEnergy(this);
 
-        pBlockEntity.outputEnergy(pBlockEntity);
-
-        ItemStack input = pBlockEntity.itemHandler.getStackInSlot(0);
+        ItemStack input = this.itemHandler.getStackInSlot(0);
         boolean checkIfFull = false;
 
-        for(int i = 1; i < pBlockEntity.itemHandler.getSlots(); i++){
-            ItemStack augment = pBlockEntity.itemHandler.getStackInSlot(i);
+        for(int i = 1; i < this.itemHandler.getSlots(); i++){
+            ItemStack augment = this.itemHandler.getStackInSlot(i);
             if(augment.getItem() == ModItems.CONTROLLER_AUGMENT.get()) checkIfFull = true;
         }
 
-        if(input.isEmpty() && pBlockEntity.fuelTime <= 0) return;
-        boolean canInsertEnergy = pBlockEntity.energyHandler.getMaxEnergyStored() - pBlockEntity.energyHandler.getEnergyStored() >= pBlockEntity.energyPerTick;
+        if(input.isEmpty() && this.fuelTime <= 0) return;
+        boolean canInsertEnergy = this.energyHandler.getMaxEnergyStored() - this.energyHandler.getEnergyStored() >= this.energyPerTick;
 
         if(canInsertEnergy || !checkIfFull) {
-            if(pBlockEntity.fuelTime > 0) {
-                pBlockEntity.fuelTime--;
-                pBlockEntity.energyHandler.receiveEnergyIntern(pBlockEntity.energyPerTick, false);
+            if(this.fuelTime > 0) {
+                this.fuelTime--;
+                this.energyHandler.receiveEnergyIntern(this.energyPerTick, false);
             } else if(!input.isEmpty() && canInsertEnergy) {
-                pBlockEntity.maxFuelTime = (int)(ForgeHooks.getBurnTime(pBlockEntity.itemHandler.extractItem(0, 1, false), RecipeType.SMELTING) * pBlockEntity.fuelEfficiency);
-                pBlockEntity.fuelTime = pBlockEntity.maxFuelTime;
+                this.maxFuelTime = (int)(ForgeHooks.getBurnTime(this.itemHandler.extractItem(0, 1, false), RecipeType.SMELTING) * this.fuelEfficiency);
+                this.fuelTime = this.maxFuelTime;
             }
         }
     }
@@ -188,7 +186,7 @@ public abstract class GeneratorBlockEntityBase extends BlockEntity implements Me
             for(Direction direction : Direction.values()) {
                 BlockEntity be = pBlockEntity.level.getBlockEntity(worldPosition.relative(direction));
                 if(be == null) continue;
-                boolean doContinue = be.getCapability(CapabilityEnergy.ENERGY, direction.getOpposite()).map(handler -> {
+                boolean doContinue = be.getCapability(ForgeCapabilities.ENERGY, direction.getOpposite()).map(handler -> {
                     if(!handler.canReceive()) return true;
                     int sendSimulate = pBlockEntity.energyHandler.extractEnergy(pBlockEntity.energyHandler.getEnergyStored(), true);
                     int energySent = handler.receiveEnergy(sendSimulate, false);

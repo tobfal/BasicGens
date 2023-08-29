@@ -1,11 +1,10 @@
 package de.tobfal.basicgens.block;
 
+import de.tobfal.basicgens.block.entity.ITickableBlockEntity;
 import de.tobfal.basicgens.block.entity.NetherGeneratorBlockEntity;
 import de.tobfal.basicgens.init.Config;
-import de.tobfal.basicgens.init.ModBlockEntities;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -23,41 +22,21 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.network.NetworkHooks;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class NetherGeneratorBlock extends BaseEntityBlock {
-
-    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
-
-    public NetherGeneratorBlock(Properties properties) {
-        super(properties);
-        this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH));
-    }
-
-    @Override
-    @ParametersAreNonnullByDefault
-    public void appendHoverText(ItemStack stack, @Nullable BlockGetter blockGetter, List<Component> components, TooltipFlag tooltipFlag) {
-        if(Screen.hasShiftDown()) {
-            components.add(Component.translatable("tooltip.basicgens.generator.description.fluid"));
-            components.add(Component.translatable("tooltip.basicgens.generator.capacity").append(String.format(" %.0f kRF", Config.NETHER_GENERATOR_CAPACITY.get()/1000f)));
-            components.add(Component.translatable("tooltip.basicgens.generator.pertick").append(" " + Config.NETHER_GENERATOR_PERTICK.get() + " RF/t"));
-            components.add(Component.translatable("tooltip.basicgens.generator.transfer").append(" " + Config.NETHER_GENERATOR_TRANSFER.get() + " RF/t"));
-        } else {
-            components.add(Component.translatable("tooltip.basicgens.generator"));
-        }
-    }
+public class NetherGeneratorBlock extends HorizontalDirectionalBlock implements EntityBlock {
 
     public static final VoxelShape SHAPE = Stream.of(
             Block.box(14, 1, 0, 15, 2, 1),
@@ -78,11 +57,55 @@ public class NetherGeneratorBlock extends BaseEntityBlock {
             Block.box(1, 10, 0, 2, 11, 16)
     ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
 
+    public NetherGeneratorBlock(Properties pProperties) {
+        super(pProperties);
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
+        super.createBlockStateDefinition(pBuilder);
+        pBuilder.add(FACING);
+    }
+
+    @Override
+    @ParametersAreNonnullByDefault
+    public void appendHoverText(ItemStack stack, @Nullable BlockGetter blockGetter, List<Component> components, TooltipFlag tooltipFlag) {
+        if(Screen.hasShiftDown()) {
+            components.add(Component.translatable("tooltip.basicgens.generator.description.fluid"));
+            components.add(Component.translatable("tooltip.basicgens.generator.capacity").append(String.format(" %.0f kRF", Config.NETHER_GENERATOR_CAPACITY.get()/1000f)));
+            components.add(Component.translatable("tooltip.basicgens.generator.pertick").append(" " + Config.NETHER_GENERATOR_PERTICK.get() + " RF/t"));
+            components.add(Component.translatable("tooltip.basicgens.generator.transfer").append(" " + Config.NETHER_GENERATOR_TRANSFER.get() + " RF/t"));
+        } else {
+            components.add(Component.translatable("tooltip.basicgens.generator"));
+        }
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
+        return SHAPE;
+    }
+
+    @Override
+    public RenderShape getRenderShape(BlockState pState) {
+        return RenderShape.MODEL;
+    }
 
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
         return new NetherGeneratorBlockEntity(pPos, pState);
+    }
+
+    @Override
+    public BlockState getStateForPlacement(BlockPlaceContext pContext) {
+        return this.defaultBlockState().setValue(FACING, pContext.getHorizontalDirection().getOpposite());
+    }
+
+    @Override
+    public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
+        if (pState.getBlock() != pNewState.getBlock()) {
+            super.onRemove(pState, pLevel, pPos, pNewState, pIsMoving);
+        }
     }
 
     @Override
@@ -102,42 +125,9 @@ public class NetherGeneratorBlock extends BaseEntityBlock {
         return InteractionResult.sidedSuccess(pLevel.isClientSide());
     }
 
-    @Override
-    public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
-        if (pState.getBlock() != pNewState.getBlock()) {
-            super.onRemove(pState, pLevel, pPos, pNewState, pIsMoving);
-        }
-    }
-
-    @Override
-    public BlockState getStateForPlacement(BlockPlaceContext pContext) {
-        return this.defaultBlockState().setValue(FACING, pContext.getHorizontalDirection().getOpposite());
-    }
-
-    @Override
-    public BlockState rotate(BlockState pState, Rotation pRotation) {
-        return pState.setValue(FACING, pRotation.rotate(pState.getValue(FACING)));
-    }
-
-    @Override
-    public BlockState mirror(BlockState pState, Mirror pMirror) {
-        return pState.rotate(pMirror.getRotation(pState.getValue(FACING)));
-    }
-
-    @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
-        pBuilder.add(FACING);
-    }
-
-    @Override
-    public RenderShape getRenderShape(BlockState pState) {
-        return RenderShape.MODEL;
-    }
-
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        return createTickerHelper(pBlockEntityType, ModBlockEntities.NETHER_GENERATOR.get(), NetherGeneratorBlockEntity::tick);
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level pLevel, @NotNull BlockState pState, @NotNull BlockEntityType<T> pBlockEntityType) {
+        return ITickableBlockEntity.getTickerHelper(pLevel);
     }
-
 }

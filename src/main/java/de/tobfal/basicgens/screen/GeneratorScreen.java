@@ -1,14 +1,15 @@
 package de.tobfal.basicgens.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import de.tobfal.basicgens.BasicGens;
 import de.tobfal.basicgens.block.menu.GeneratorMenu;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import org.jetbrains.annotations.NotNull;
 
 public class GeneratorScreen extends AbstractContainerScreen<GeneratorMenu> {
 
@@ -24,7 +25,7 @@ public class GeneratorScreen extends AbstractContainerScreen<GeneratorMenu> {
     }
 
     @Override
-    protected void renderBg(PoseStack pPoseStack, float pPartialTick, int pMouseX, int pMouseY) {
+    protected void renderBg(@NotNull GuiGraphics pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, TEXTURE);
@@ -32,24 +33,24 @@ public class GeneratorScreen extends AbstractContainerScreen<GeneratorMenu> {
         int x = (width - imageWidth) / 2;
         int y = (height - imageHeight) / 2;
 
-        this.blit(pPoseStack, x, y, 0, 0, imageWidth, imageHeight);
+        pGuiGraphics.blit(TEXTURE, x, y, 0, 0, imageWidth, imageHeight);
 
         int energy = menu.getScaledEnergy();
         int fuelProgress = menu.getScaledFuelProgress();
 
-        this.blit(pPoseStack, x + 156, y + 11 + 64 - energy, 176, 64 - energy, 8, energy);
-        this.blit(pPoseStack, x + 81, y + 54 + 14 - fuelProgress, 176, 64 + 14 - fuelProgress, 14, fuelProgress);
+        pGuiGraphics.blit(TEXTURE, x + 156, y + 11 + 64 - energy, 176, 64 - energy, 8, energy);
+        pGuiGraphics.blit(TEXTURE, x + 81, y + 54 + 14 - fuelProgress, 176, 64 + 14 - fuelProgress, 14, fuelProgress);
     }
 
     @Override
-    public void render(PoseStack pPoseStack, int mouseX, int mouseY, float delta) {
-        renderBackground(pPoseStack);
-        super.render(pPoseStack, mouseX, mouseY, delta);
-        renderTooltip(pPoseStack, mouseX, mouseY);
+    public void render(@NotNull GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+        renderBg(pGuiGraphics, pPartialTick, pMouseX, pMouseY);
+        super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
+        renderTooltip(pGuiGraphics, pMouseX, pMouseY);
 
-        int x = mouseX - (width - imageWidth) / 2;
-        int y = mouseY - (height - imageHeight) / 2;
+        int x = pMouseX - (width - imageWidth) / 2;
+        int y = pMouseY - (height - imageHeight) / 2;
         if(x > 155 && x < 164 && y > 10 && y < 75)
-            renderTooltip(pPoseStack, Component.literal(String.format("%.1f kRF/%.0f kRF", menu.getEnergy()/1000f, menu.getMaxEnergy()/1000f)), mouseX, mouseY);
+            pGuiGraphics.renderTooltip(this.font, Component.literal(String.format("%.1f kRF/%.0f kRF", menu.getEnergy()/1000f, menu.getMaxEnergy()/1000f)), pMouseX, pMouseY);
     }
 }

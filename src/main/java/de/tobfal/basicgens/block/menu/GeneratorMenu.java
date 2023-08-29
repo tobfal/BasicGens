@@ -13,7 +13,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class GeneratorMenu extends AbstractContainerMenu {
@@ -23,7 +23,7 @@ public class GeneratorMenu extends AbstractContainerMenu {
     private final ContainerData data;
 
     public GeneratorMenu(int windowId, Inventory inv, FriendlyByteBuf extraData) {
-        this(windowId, inv, inv.player.level.getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(4));
+        this(windowId, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(4));
     }
 
     public GeneratorMenu(int windowId, Inventory inv, BlockEntity entity, ContainerData data) {
@@ -31,7 +31,7 @@ public class GeneratorMenu extends AbstractContainerMenu {
         checkContainerSize(inv, 2);
 
         blockEntity = ((GeneratorBlockEntityBase) entity);
-        this.level = inv.player.level;
+        this.level = inv.player.level();
         this.data = data;
 
         // Make inventory and container slots
@@ -48,7 +48,7 @@ public class GeneratorMenu extends AbstractContainerMenu {
 
         // Container
         if(blockEntity != null) {
-            blockEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h -> {
+            blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(h -> {
                 addSlot(new SlotItemHandler(h, 0, 80,35));
 
                 addSlot(new SlotItemHandler(h, 1, 26,35));

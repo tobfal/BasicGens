@@ -2,26 +2,23 @@ package de.tobfal.basicgens.data;
 
 import de.tobfal.basicgens.init.ModBlocks;
 import de.tobfal.basicgens.init.ModItems;
-import net.minecraft.data.DataGenerator;
-import net.minecraft.data.recipes.FinishedRecipe;
-import net.minecraft.data.recipes.RecipeProvider;
-import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.data.PackOutput;
+import net.minecraft.data.recipes.*;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.common.crafting.conditions.IConditionBuilder;
+import org.jetbrains.annotations.NotNull;
 
+import java.awt.*;
 import java.util.function.Consumer;
 
 public class ModRecipeProvider extends RecipeProvider implements IConditionBuilder {
-
-    public ModRecipeProvider(DataGenerator pGenerator) {
-        super(pGenerator);
+    public ModRecipeProvider(PackOutput pOutput) {
+        super(pOutput);
     }
 
     @Override
-    protected void buildCraftingRecipes(Consumer<FinishedRecipe> pFinishedRecipeConsumer) {
-
-        //Items
-        ShapedRecipeBuilder.shaped(ModItems.CONTROLLER_AUGMENT.get())
+    protected void buildRecipes(@NotNull Consumer<FinishedRecipe> pWriter) {
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.CONTROLLER_AUGMENT.get())
                 .define('D', Items.DIAMOND)
                 .define('L', Items.LEVER)
                 .define('R', Items.REDSTONE_BLOCK)
@@ -30,11 +27,9 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .pattern("RDR")
                 .pattern("ILI")
                 .unlockedBy("has_material", has(ModBlocks.STONE_GENERATOR.get().asItem()))
-                .save(pFinishedRecipeConsumer);
-        //----------------
+                .save(pWriter);
 
-        //Blocks
-        ShapedRecipeBuilder.shaped(ModBlocks.STONE_GENERATOR.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModBlocks.STONE_GENERATOR.get())
                 .define('F', Items.FURNACE)
                 .define('G', Items.GUNPOWDER)
                 .define('P', Items.PISTON)
@@ -43,9 +38,9 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .pattern("SPS")
                 .pattern("GFG")
                 .unlockedBy("has_material", has(Items.FURNACE))
-                .save(pFinishedRecipeConsumer);
+                .save(pWriter);
 
-        ShapedRecipeBuilder.shaped(ModBlocks.IRON_GENERATOR.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModBlocks.IRON_GENERATOR.get())
                 .define('G', ModBlocks.STONE_GENERATOR.get().asItem())
                 .define('I', Items.IRON_BLOCK)
                 .define('R', Items.REDSTONE)
@@ -54,9 +49,9 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .pattern("IGI")
                 .pattern("RPR")
                 .unlockedBy("has_material", has(ModBlocks.STONE_GENERATOR.get().asItem()))
-                .save(pFinishedRecipeConsumer);
+                .save(pWriter);
 
-        ShapedRecipeBuilder.shaped(ModBlocks.GOLD_GENERATOR.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModBlocks.GOLD_GENERATOR.get())
                 .define('G', ModBlocks.IRON_GENERATOR.get().asItem())
                 .define('B', Items.GOLD_BLOCK)
                 .define('R', Items.REDSTONE)
@@ -65,9 +60,9 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .pattern("BGB")
                 .pattern("RPR")
                 .unlockedBy("has_material", has(ModBlocks.IRON_GENERATOR.get().asItem()))
-                .save(pFinishedRecipeConsumer);
+                .save(pWriter);
 
-        ShapedRecipeBuilder.shaped(ModBlocks.NETHER_GENERATOR.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModBlocks.NETHER_GENERATOR.get())
                 .define('G', ModBlocks.STONE_GENERATOR.get().asItem())
                 .define('N', Items.NETHER_BRICKS)
                 .define('B', Items.GOLD_BLOCK)
@@ -76,9 +71,9 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .pattern("NGN")
                 .pattern("BLB")
                 .unlockedBy("has_material", has(ModBlocks.STONE_GENERATOR.get().asItem()))
-                .save(pFinishedRecipeConsumer);
+                .save(pWriter);
 
-        ShapedRecipeBuilder.shaped(ModBlocks.GLOWSTONE_GENERATOR.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModBlocks.GLOWSTONE_GENERATOR.get())
                 .define('G', ModBlocks.NETHER_GENERATOR.get().asItem())
                 .define('S', Items.GLOWSTONE)
                 .define('B', Items.GOLD_BLOCK)
@@ -86,8 +81,6 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .pattern("SGS")
                 .pattern("BBB")
                 .unlockedBy("has_material", has(ModBlocks.NETHER_GENERATOR.get().asItem()))
-                .save(pFinishedRecipeConsumer);
-        //----------------
+                .save(pWriter);
     }
-
 }

@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "basicgens:iron_generator"
+        "recipe": "basicgens:controller_augment"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -28,7 +28,8 @@
   ],
   "rewards": {
     "recipes": [
-      "basicgens:iron_generator"
+      "basicgens:controller_augment"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

@@ -17,14 +17,14 @@ public class FluidGeneratorMenu extends AbstractContainerMenu {
     private final ContainerData data;
 
     public FluidGeneratorMenu(int windowId, Inventory inv, FriendlyByteBuf extraData) {
-        this(windowId, inv, inv.player.level.getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(4));
+        this(windowId, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(4));
     }
 
     public FluidGeneratorMenu(int windowId, Inventory inv, BlockEntity entity, ContainerData data) {
         super(ModMenuTypes.FLUID_GENERATOR_MENU.get(), windowId);
 
         blockEntity = ((FluidGeneratorBlockEntityBase) entity);
-        this.level = inv.player.level;
+        this.level = inv.player.level();
         this.data = data;
 
         // Make inventory and container slots

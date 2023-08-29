@@ -6,7 +6,7 @@
         "items": [
           {
             "items": [
-              "basicgens:iron_generator"
+              "minecraft:furnace"
             ]
           }
         ]
@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "basicgens:gold_generator"
+        "recipe": "basicgens:stone_generator"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -28,7 +28,8 @@
   ],
   "rewards": {
     "recipes": [
-      "basicgens:gold_generator"
+      "basicgens:stone_generator"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

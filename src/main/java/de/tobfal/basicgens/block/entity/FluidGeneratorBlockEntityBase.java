@@ -1,21 +1,15 @@
 package de.tobfal.basicgens.block.entity;
 
 import de.tobfal.basicgens.energy.ModEnergyStorage;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.sounds.Sound;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.MenuProvider;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
-import net.minecraft.world.item.BucketItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -25,19 +19,17 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
-import java.util.function.Predicate;
 
-public abstract class FluidGeneratorBlockEntityBase extends BlockEntity implements MenuProvider {
+public abstract class FluidGeneratorBlockEntityBase extends BlockEntity implements MenuProvider, ITickableBlockEntity {
 
     private LazyOptional<EnergyStorage> lazyEnergyHandler = LazyOptional.empty();
     private final ModEnergyStorage energyHandler;
@@ -105,9 +97,9 @@ public abstract class FluidGeneratorBlockEntityBase extends BlockEntity implemen
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @javax.annotation.Nullable Direction side) {
-        if (cap == CapabilityEnergy.ENERGY)
+        if (cap == ForgeCapabilities.ENERGY)
             return lazyEnergyHandler.cast();
-        if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+        if (cap == ForgeCapabilities.FLUID_HANDLER)
             return lazyFluidHandler.cast();
 
         return super.getCapability(cap, side);
@@ -141,16 +133,14 @@ public abstract class FluidGeneratorBlockEntityBase extends BlockEntity implemen
         lazyFluidHandler = LazyOptional.of(() -> fluidHandler);
     }
 
-    public static void tick(Level pLevel, BlockPos pPos, BlockState pState, FluidGeneratorBlockEntityBase pBlockEntity) {
-
-        pBlockEntity.outputEnergy(pBlockEntity);
-        if(pBlockEntity.fluidHandler.isEmpty()) return;
-        boolean canInsertEnergy = pBlockEntity.energyHandler.getMaxEnergyStored() - pBlockEntity.energyHandler.getEnergyStored() >= pBlockEntity.energyPerTick;
+    public void tick() {
+        this.outputEnergy(this);
+        if(this.fluidHandler.isEmpty()) return;
+        boolean canInsertEnergy = this.energyHandler.getMaxEnergyStored() - this.energyHandler.getEnergyStored() >= this.energyPerTick;
         if(!canInsertEnergy) return;
 
-        pBlockEntity.fluidHandler.drain(1, IFluidHandler.FluidAction.EXECUTE);
-        pBlockEntity.energyHandler.receiveEnergyIntern(pBlockEntity.energyPerTick, false);
-
+        this.fluidHandler.drain(1, IFluidHandler.FluidAction.EXECUTE);
+        this.energyHandler.receiveEnergyIntern(this.energyPerTick, false);
     }
 
     private void outputEnergy(FluidGeneratorBlockEntityBase pBlockEntity) {
@@ -158,7 +148,7 @@ public abstract class FluidGeneratorBlockEntityBase extends BlockEntity implemen
             for(Direction direction : Direction.values()) {
                 BlockEntity be = pBlockEntity.level.getBlockEntity(worldPosition.relative(direction));
                 if(be == null) continue;
-                boolean doContinue = be.getCapability(CapabilityEnergy.ENERGY, direction.getOpposite()).map(handler -> {
+                boolean doContinue = be.getCapability(ForgeCapabilities.ENERGY, direction.getOpposite()).map(handler -> {
                     if(!handler.canReceive()) return true;
                     int sendSimulate = pBlockEntity.energyHandler.extractEnergy(pBlockEntity.energyHandler.getEnergyStored(), true);
                     int energySent = handler.receiveEnergy(sendSimulate, false);

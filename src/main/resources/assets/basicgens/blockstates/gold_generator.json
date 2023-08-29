@@ -1,5 +1,19 @@
 {
   "variants": {
-    "": { "model": "basicgens:block/gold_generator" }
+    "facing=north": {
+      "model": "basicgens:block/gold_generator"
+    },
+    "facing=south": {
+      "model": "basicgens:block/gold_generator",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "basicgens:block/gold_generator",
+      "y": -90
+    },
+    "facing=east": {
+      "model": "basicgens:block/gold_generator",
+      "y": 90
+    }
   }
 }

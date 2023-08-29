@@ -6,7 +6,7 @@
         "items": [
           {
             "items": [
-              "basicgens:stone_generator"
+              "basicgens:iron_generator"
             ]
           }
         ]
@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "basicgens:controller_augment"
+        "recipe": "basicgens:gold_generator"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -28,7 +28,8 @@
   ],
   "rewards": {
     "recipes": [
-      "basicgens:controller_augment"
+      "basicgens:gold_generator"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

@@ -1,5 +1,19 @@
 {
   "variants": {
-    "": { "model": "basicgens:block/stone_generator" }
+    "facing=north": {
+      "model": "basicgens:block/stone_generator"
+    },
+    "facing=south": {
+      "model": "basicgens:block/stone_generator",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "basicgens:block/stone_generator",
+      "y": -90
+    },
+    "facing=east": {
+      "model": "basicgens:block/stone_generator",
+      "y": 90
+    }
   }
 }

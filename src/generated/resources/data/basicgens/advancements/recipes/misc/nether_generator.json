@@ -6,7 +6,7 @@
         "items": [
           {
             "items": [
-              "minecraft:furnace"
+              "basicgens:stone_generator"
             ]
           }
         ]
@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "basicgens:stone_generator"
+        "recipe": "basicgens:nether_generator"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -28,7 +28,8 @@
   ],
   "rewards": {
     "recipes": [
-      "basicgens:stone_generator"
+      "basicgens:nether_generator"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

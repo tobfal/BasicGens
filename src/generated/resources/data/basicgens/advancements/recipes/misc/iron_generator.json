@@ -6,7 +6,7 @@
         "items": [
           {
             "items": [
-              "basicgens:nether_generator"
+              "basicgens:stone_generator"
             ]
           }
         ]
@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "basicgens:glowstone_generator"
+        "recipe": "basicgens:iron_generator"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -28,7 +28,8 @@
   ],
   "rewards": {
     "recipes": [
-      "basicgens:glowstone_generator"
+      "basicgens:iron_generator"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

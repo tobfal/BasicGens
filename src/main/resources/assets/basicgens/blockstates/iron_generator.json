@@ -1,5 +1,19 @@
 {
   "variants": {
-    "": { "model": "basicgens:block/iron_generator" }
+    "facing=north": {
+      "model": "basicgens:block/iron_generator"
+    },
+    "facing=south": {
+      "model": "basicgens:block/iron_generator",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "basicgens:block/iron_generator",
+      "y": -90
+    },
+    "facing=east": {
+      "model": "basicgens:block/iron_generator",
+      "y": 90
+    }
   }
 }

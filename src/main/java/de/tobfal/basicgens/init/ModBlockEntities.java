@@ -11,8 +11,6 @@ import net.minecraftforge.registries.RegistryObject;
 public class ModBlockEntities {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, BasicGens.MOD_ID);
 
-    // Register BlockEntities
-
     public static final RegistryObject<BlockEntityType<StoneGeneratorBlockEntity>> STONE_GENERATOR = BLOCK_ENTITIES.register("stone_generator",
             () -> BlockEntityType.Builder.of(StoneGeneratorBlockEntity::new, ModBlocks.STONE_GENERATOR.get()).build(null));
 
@@ -27,8 +25,6 @@ public class ModBlockEntities {
 
     public static final RegistryObject<BlockEntityType<GlowstoneGeneratorBlockEntity>> GLOWSTONE_GENERATOR = BLOCK_ENTITIES.register("glowstone_generator",
             () -> BlockEntityType.Builder.of(GlowstoneGeneratorBlockEntity::new, ModBlocks.GLOWSTONE_GENERATOR.get()).build(null));
-
-    //----------------
 
     public static void register(IEventBus eventBus) {
         BLOCK_ENTITIES.register(eventBus);
