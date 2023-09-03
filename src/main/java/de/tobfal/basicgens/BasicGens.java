@@ -1,8 +1,8 @@
 package de.tobfal.basicgens;
 
+import de.tobfal.basicgens.client.screen.FluidGeneratorScreen;
+import de.tobfal.basicgens.client.screen.GeneratorScreen;
 import de.tobfal.basicgens.init.*;
-import de.tobfal.basicgens.screen.FluidGeneratorScreen;
-import de.tobfal.basicgens.screen.GeneratorScreen;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
@@ -15,15 +15,16 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.stream.Collectors;
-
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(BasicGens.MOD_ID)
-public class BasicGens
-{
+public class BasicGens {
+
+    //<editor-fold desc="Constants">
     public static final String MOD_ID = "basicgens";
     private static final Logger LOGGER = LogManager.getLogger();
+    //</editor-fold>
 
+    //<editor-fold desc="Constructor">
     public BasicGens() {
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
@@ -40,7 +41,9 @@ public class BasicGens
 
         MinecraftForge.EVENT_BUS.register(this);
     }
+    //</editor-fold>
 
+    //<editor-fold desc="Methods">
     private void clientSetup(final FMLClientSetupEvent event) {
 
         MenuScreens.register(ModMenuTypes.GENERATOR_MENU.get(), GeneratorScreen::new);
@@ -49,11 +52,10 @@ public class BasicGens
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.STONE_GENERATOR.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.IRON_GENERATOR.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.NETHER_GENERATOR.get(), RenderType.cutout());
-
     }
 
     private void setup(final FMLCommonSetupEvent event) {
         LOGGER.info("[BasicGens] PreInit");
     }
-
+    //</editor-fold>
 }

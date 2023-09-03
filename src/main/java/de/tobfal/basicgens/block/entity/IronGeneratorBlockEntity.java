@@ -7,25 +7,24 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class IronGeneratorBlockEntity extends GeneratorBlockEntityBase {
+public class IronGeneratorBlockEntity extends BaseGeneratorBlockEntity {
 
+    //<editor-fold desc="Constructor">
     public IronGeneratorBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
         super(ModBlockEntities.IRON_GENERATOR.get(), pWorldPosition, pBlockState, Config.IRON_GENERATOR_EFFICIENCY.get(),
                 Config.IRON_GENERATOR_CAPACITY.get(), Config.IRON_GENERATOR_PERTICK.get(), Config.IRON_GENERATOR_TRANSFER.get());
     }
+    //</editor-fold>
 
+    //<editor-fold desc="Methods">
+    @NotNull
     @Override
     public Component getDisplayName() {
-        return Component.literal("Iron Generator");
+        return Component.translatable("block.basicgens.iron_generator");
     }
-
-    @Nullable
-    @Override
-    public GeneratorMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
-        return new GeneratorMenu(pContainerId, pInventory, this, this.data);
-    }
+    //</editor-fold>
 }

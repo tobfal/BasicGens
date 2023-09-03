@@ -28,6 +28,7 @@ public class ModBlocks {
     public static final RegistryObject<Block> GLOWSTONE_GENERATOR = registerBlock("glowstone_generator",
             () -> new GlowstoneGeneratorBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(3f).noOcclusion()));
 
+    //<editor-fold desc="Methods">
     private static <T extends Block> void registerBlockItem(String name, boolean addToTab, RegistryObject<T> block) {
         if (addToTab) {
             ModCreativeTabs.addToTab(ModItems.ITEMS.register(name, () -> new BlockItem(block.get(), new Item.Properties())));
@@ -45,8 +46,9 @@ public class ModBlocks {
         registerBlockItem(name, addToTab, toReturn);
         return toReturn;
     }
+    //</editor-fold>
 
-    public static void register(IEventBus eventBus){
+    public static void register(IEventBus eventBus) {
         BLOCKS.register(eventBus);
     }
 }

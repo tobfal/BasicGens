@@ -3,21 +3,28 @@ package de.tobfal.basicgens.data;
 import de.tobfal.basicgens.init.ModBlocks;
 import de.tobfal.basicgens.init.ModItems;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.recipes.*;
+import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.RecipeProvider;
+import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.common.crafting.conditions.IConditionBuilder;
 import org.jetbrains.annotations.NotNull;
 
-import java.awt.*;
 import java.util.function.Consumer;
 
 public class ModRecipeProvider extends RecipeProvider implements IConditionBuilder {
+
+    //<editor-fold desc="Constructor">
     public ModRecipeProvider(PackOutput pOutput) {
         super(pOutput);
     }
+    //</editor-fold>
 
     @Override
     protected void buildRecipes(@NotNull Consumer<FinishedRecipe> pWriter) {
+
+        //<editor-fold desc="Shaped">
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.CONTROLLER_AUGMENT.get())
                 .define('D', Items.DIAMOND)
                 .define('L', Items.LEVER)
@@ -82,5 +89,6 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .pattern("BBB")
                 .unlockedBy("has_material", has(ModBlocks.NETHER_GENERATOR.get().asItem()))
                 .save(pWriter);
+        //</editor-fold>
     }
 }

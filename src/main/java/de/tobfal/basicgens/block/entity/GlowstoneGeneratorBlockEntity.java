@@ -9,23 +9,23 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class GlowstoneGeneratorBlockEntity extends FluidGeneratorBlockEntityBase {
+public class GlowstoneGeneratorBlockEntity extends BaseFluidGeneratorBlockEntity {
 
+    //<editor-fold desc="Constructor">
     public GlowstoneGeneratorBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
         super(ModBlockEntities.GLOWSTONE_GENERATOR.get(), pWorldPosition, pBlockState, Fluids.LAVA, Config.GLOWSTONE_GENERATOR_EFFICIENCY.get(),
                 Config.GLOWSTONE_GENERATOR_CAPACITY.get(), Config.GLOWSTONE_GENERATOR_PERTICK.get(), Config.GLOWSTONE_GENERATOR_TRANSFER.get());
     }
+    //</editor-fold>
 
+    //<editor-fold desc="Methods">
+    @NotNull
     @Override
     public Component getDisplayName() {
-        return Component.literal("Glowstone Generator");
+        return Component.translatable("block.basicgens.glowstone_generator");
     }
-
-    @Nullable
-    @Override
-    public FluidGeneratorMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
-        return new FluidGeneratorMenu(pContainerId, pInventory, this, this.data);
-    }
+    //</editor-fold>
 }

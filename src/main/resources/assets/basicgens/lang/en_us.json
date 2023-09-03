@@ -4,14 +4,10 @@
   "block.basicgens.gold_generator": "Gold Generator",
   "block.basicgens.nether_generator": "Nether Generator",
   "block.basicgens.glowstone_generator": "Glowstone Generator",
-
   "item.basicgens.controller_augment": "Controller Augment",
-
   "creativetab.basicgens.basicgenstab": "BasicGens",
-
-  "tooltip.basicgens.controller_augment": "§e<SHIFT>§r",
-  "tooltip.basicgens.controller_augment.shift": "§ePrevents fuel in generators from ticking down while the energy buffer is full.§r",
-
+  "tooltip.basicgens.controller_augment": "§ePrevents fuel in generators from ticking down while the energy buffer is full.§r",
+  "tooltip.basicgens.shift": "§e<SHIFT>§r",
   "tooltip.basicgens.generator": "§e<SHIFT>§r",
   "tooltip.basicgens.generator.description": "§eConverts burnable items to RF power.§r",
   "tooltip.basicgens.generator.description.fluid": "§eConverts lava into RF power.§r",

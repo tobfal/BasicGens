@@ -1,4 +1,4 @@
-package de.tobfal.basicgens.screen;
+package de.tobfal.basicgens.client.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.tobfal.basicgens.BasicGens;
@@ -19,12 +19,17 @@ import org.jetbrains.annotations.NotNull;
 
 public class FluidGeneratorScreen extends AbstractContainerScreen<FluidGeneratorMenu> {
 
+    //<editor-fold desc="Constants">
     private static final ResourceLocation TEXTURE = new ResourceLocation(BasicGens.MOD_ID, "textures/gui/fluid_generator_gui.png");
+    //</editor-fold>
 
+    //<editor-fold desc="Constructor">
     public FluidGeneratorScreen(FluidGeneratorMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
     }
+    //</editor-fold>
 
+    //<editor-fold desc="Methods">
     @Override
     protected void init() {
         super.init();
@@ -53,8 +58,8 @@ public class FluidGeneratorScreen extends AbstractContainerScreen<FluidGenerator
 
         int spritesNeeded = fluidHeight / 16;
 
-        for(int i = 0; i < spritesNeeded + 1; i++){
-            for(int j = 0; j < 3; j++){
+        for (int i = 0; i < spritesNeeded + 1; i++) {
+            for (int j = 0; j < 3; j++) {
                 pGuiGraphics.blit(x + 72 + 16 * j, y + 16 + 59 - fluidHeight + 16 * i, 0, 16, 16, fluidSprite);
             }
         }
@@ -75,9 +80,10 @@ public class FluidGeneratorScreen extends AbstractContainerScreen<FluidGenerator
 
         int x = pMouseX - (width - imageWidth) / 2;
         int y = pMouseY - (height - imageHeight) / 2;
-        if(x > 155 && x < 164 && y > 10 && y < 75)
-            pGuiGraphics.renderTooltip(this.font, Component.literal(String.format("%.1f kRF/%.0f kRF", menu.getEnergy()/1000f, menu.getMaxEnergy()/1000f)), pMouseX, pMouseY);
-        if(x > 71 && x < 105 && y > 15 && y < 75)
+        if (x > 155 && x < 164 && y > 10 && y < 75)
+            pGuiGraphics.renderTooltip(this.font, Component.literal(String.format("%.1f kRF/%.0f kRF", menu.getEnergy() / 1000f, menu.getMaxEnergy() / 1000f)), pMouseX, pMouseY);
+        if (x > 71 && x < 105 && y > 15 && y < 75)
             pGuiGraphics.renderTooltip(this.font, Component.literal(String.format("%d mB/%d mB", menu.getFluidAmmount(), menu.getFluidCapacity())), pMouseX, pMouseY);
     }
+    //</editor-fold>
 }

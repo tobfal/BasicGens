@@ -8,23 +8,23 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class GoldGeneratorBlockEntity extends GeneratorBlockEntityBase {
+public class GoldGeneratorBlockEntity extends BaseGeneratorBlockEntity {
 
+    //<editor-fold desc="Constructor">
     public GoldGeneratorBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
         super(ModBlockEntities.GOLD_GENERATOR.get(), pWorldPosition, pBlockState, Config.GOLD_GENERATOR_EFFICIENCY.get(),
                 Config.GOLD_GENERATOR_CAPACITY.get(), Config.GOLD_GENERATOR_PERTICK.get(), Config.GOLD_GENERATOR_TRANSFER.get());
     }
+    //</editor-fold>
 
+    //<editor-fold desc="Methods">
+    @NotNull
     @Override
     public Component getDisplayName() {
-        return Component.literal("Gold Generator");
+        return Component.translatable("block.basicgens.gold_generator");
     }
-
-    @Nullable
-    @Override
-    public GeneratorMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
-        return new GeneratorMenu(pContainerId, pInventory, this, this.data);
-    }
+    //</editor-fold>
 }

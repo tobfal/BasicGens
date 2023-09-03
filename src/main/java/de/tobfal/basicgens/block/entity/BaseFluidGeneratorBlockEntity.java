@@ -1,5 +1,7 @@
 package de.tobfal.basicgens.block.entity;
 
+import de.tobfal.basicgens.block.menu.FluidGeneratorMenu;
+import de.tobfal.basicgens.block.menu.GeneratorMenu;
 import de.tobfal.basicgens.energy.ModEnergyStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -8,6 +10,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
@@ -27,15 +30,17 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
-public abstract class FluidGeneratorBlockEntityBase extends BlockEntity implements MenuProvider, ITickableBlockEntity {
+public abstract class BaseFluidGeneratorBlockEntity extends BlockEntity implements MenuProvider, ITickableBlockEntity {
 
+    //<editor-fold desc="Properties">
     private LazyOptional<EnergyStorage> lazyEnergyHandler = LazyOptional.empty();
     private final ModEnergyStorage energyHandler;
 
     private LazyOptional<FluidTank> lazyFluidHandler = LazyOptional.empty();
-    private final FluidTank fluidHandler = new FluidTank(5000){
+    private final FluidTank fluidHandler = new FluidTank(5000) {
         @Override
         protected void onContentsChanged() {
             setChanged();
@@ -44,17 +49,18 @@ public abstract class FluidGeneratorBlockEntityBase extends BlockEntity implemen
 
     protected final ContainerData data;
     public double fuelEfficiency;
-
     public int energyPerTick;
+    //</editor-fold>
 
-    public FluidGeneratorBlockEntityBase(BlockEntityType<?> type, BlockPos pWorldPosition, BlockState pBlockState, Fluid validFluid, double fuelEfficiency, int capacity, int energyPerTick) {
+    //<editor-fold desc="Constructor">
+    public BaseFluidGeneratorBlockEntity(BlockEntityType<?> type, BlockPos pWorldPosition, BlockState pBlockState, Fluid validFluid, double fuelEfficiency, int capacity, int energyPerTick) {
         this(type, pWorldPosition, pBlockState, validFluid, fuelEfficiency, capacity, energyPerTick, energyPerTick);
     }
 
-    public FluidGeneratorBlockEntityBase(BlockEntityType<?> type, BlockPos pWorldPosition, BlockState pBlockState, Fluid validFluid, double fuelEfficiency, int capacity, int energyPerTick, int maxTransfer) {
+    public BaseFluidGeneratorBlockEntity(BlockEntityType<?> type, BlockPos pWorldPosition, BlockState pBlockState, Fluid validFluid, double fuelEfficiency, int capacity, int energyPerTick, int maxTransfer) {
         super(type, pWorldPosition, pBlockState);
 
-        this.energyHandler = new ModEnergyStorage(capacity, maxTransfer){
+        this.energyHandler = new ModEnergyStorage(capacity, maxTransfer) {
             @Override
             public boolean canReceive() {
                 return false;
@@ -75,10 +81,10 @@ public abstract class FluidGeneratorBlockEntityBase extends BlockEntity implemen
             @Override
             public int get(int pIndex) {
                 return switch (pIndex) {
-                    case 0 -> FluidGeneratorBlockEntityBase.this.fluidHandler.getFluidAmount();
-                    case 1 -> FluidGeneratorBlockEntityBase.this.fluidHandler.getCapacity();
-                    case 2 -> FluidGeneratorBlockEntityBase.this.energyHandler.getEnergyStored();
-                    case 3 -> FluidGeneratorBlockEntityBase.this.energyHandler.getMaxEnergyStored();
+                    case 0 -> BaseFluidGeneratorBlockEntity.this.fluidHandler.getFluidAmount();
+                    case 1 -> BaseFluidGeneratorBlockEntity.this.fluidHandler.getCapacity();
+                    case 2 -> BaseFluidGeneratorBlockEntity.this.energyHandler.getEnergyStored();
+                    case 3 -> BaseFluidGeneratorBlockEntity.this.energyHandler.getMaxEnergyStored();
                     default -> 0;
                 };
             }
@@ -93,10 +99,13 @@ public abstract class FluidGeneratorBlockEntityBase extends BlockEntity implemen
             }
         };
     }
+    //</editor-fold>
 
-    @Nonnull
+    //<editor-fold desc="Methods">
+    @NotNull
     @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @javax.annotation.Nullable Direction side) {
+    @ParametersAreNonnullByDefault
+    public <T> LazyOptional<T> getCapability(Capability<T> cap,@Nullable Direction side) {
         if (cap == ForgeCapabilities.ENERGY)
             return lazyEnergyHandler.cast();
         if (cap == ForgeCapabilities.FLUID_HANDLER)
@@ -105,8 +114,15 @@ public abstract class FluidGeneratorBlockEntityBase extends BlockEntity implemen
         return super.getCapability(cap, side);
     }
 
+    @Nullable
     @Override
-    public void invalidateCaps()  {
+    @ParametersAreNonnullByDefault
+    public FluidGeneratorMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
+        return new FluidGeneratorMenu(pContainerId, pInventory, this, this.data);
+    }
+
+    @Override
+    public void invalidateCaps() {
         super.invalidateCaps();
         lazyEnergyHandler.invalidate();
         lazyFluidHandler.invalidate();
@@ -135,43 +151,48 @@ public abstract class FluidGeneratorBlockEntityBase extends BlockEntity implemen
 
     public void tick() {
         this.outputEnergy(this);
-        if(this.fluidHandler.isEmpty()) return;
+        if (this.fluidHandler.isEmpty()) return;
         boolean canInsertEnergy = this.energyHandler.getMaxEnergyStored() - this.energyHandler.getEnergyStored() >= this.energyPerTick;
-        if(!canInsertEnergy) return;
+        if (!canInsertEnergy) return;
 
         this.fluidHandler.drain(1, IFluidHandler.FluidAction.EXECUTE);
-        this.energyHandler.receiveEnergyIntern(this.energyPerTick, false);
+        this.energyHandler.forceReceiveEnergy(this.energyPerTick, false);
     }
 
-    private void outputEnergy(FluidGeneratorBlockEntityBase pBlockEntity) {
-        if(pBlockEntity.energyHandler.canExtract()) {
-            for(Direction direction : Direction.values()) {
-                BlockEntity be = pBlockEntity.level.getBlockEntity(worldPosition.relative(direction));
-                if(be == null) continue;
-                boolean doContinue = be.getCapability(ForgeCapabilities.ENERGY, direction.getOpposite()).map(handler -> {
-                    if(!handler.canReceive()) return true;
-                    int sendSimulate = pBlockEntity.energyHandler.extractEnergy(pBlockEntity.energyHandler.getEnergyStored(), true);
-                    int energySent = handler.receiveEnergy(sendSimulate, false);
-                    pBlockEntity.energyHandler.extractEnergy(energySent, false);
-                    return pBlockEntity.energyHandler.getEnergyStored() > 0;
-                }).orElse(true);
+    private void outputEnergy(BaseFluidGeneratorBlockEntity pBlockEntity) {
+        if (!pBlockEntity.energyHandler.canExtract()) {
+            return;
+        }
 
-                if(!doContinue) return;
-            }
+        for (Direction direction : Direction.values()) {
+            Level level = pBlockEntity.level;
+            assert level != null;
+            BlockEntity blockEntity = level.getBlockEntity(worldPosition.relative(direction));
+            if (blockEntity == null) continue;
+            boolean doContinue = blockEntity.getCapability(ForgeCapabilities.ENERGY, direction.getOpposite()).map(handler -> {
+                if (!handler.canReceive()) return true;
+                int sendSimulate = pBlockEntity.energyHandler.extractEnergy(pBlockEntity.energyHandler.getEnergyStored(), true);
+                int energySent = handler.receiveEnergy(sendSimulate, false);
+                pBlockEntity.energyHandler.extractEnergy(energySent, false);
+                return pBlockEntity.energyHandler.getEnergyStored() > 0;
+            }).orElse(true);
+
+            if (!doContinue) return;
         }
     }
 
-    public void onBucketInteraction(Player pPlayer, InteractionHand pHand, FluidGeneratorBlockEntityBase pBlockEntity, Fluid pFluid){
-        if(pBlockEntity.fluidHandler.getCapacity() - pBlockEntity.fluidHandler.getFluidAmount() < 1000) return;
+    public void onBucketInteraction(Player pPlayer, InteractionHand pHand, BaseFluidGeneratorBlockEntity pBlockEntity, Fluid pFluid) {
+        if (pBlockEntity.fluidHandler.getCapacity() - pBlockEntity.fluidHandler.getFluidAmount() < 1000) return;
         FluidStack bucketFluidStack = new FluidStack(pFluid, 1000);
-        if(!pBlockEntity.fluidHandler.isFluidValid(bucketFluidStack)) return;
+        if (!pBlockEntity.fluidHandler.isFluidValid(bucketFluidStack)) return;
         pBlockEntity.fluidHandler.fill(bucketFluidStack, IFluidHandler.FluidAction.EXECUTE);
-        if(pFluid == Fluids.LAVA) {
-            pPlayer.playNotifySound(SoundEvents.BUCKET_EMPTY_LAVA, SoundSource.BLOCKS,1.0f, 1.0f);
+        if (pFluid == Fluids.LAVA) {
+            pPlayer.playNotifySound(SoundEvents.BUCKET_EMPTY_LAVA, SoundSource.BLOCKS, 1.0f, 1.0f);
         } else {
-            pPlayer.playNotifySound(SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS,1.0f, 1.0f);
+            pPlayer.playNotifySound(SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 1.0f, 1.0f);
         }
         pPlayer.setItemInHand(pHand, new ItemStack(Items.BUCKET));
     }
+    //</editor-fold>
 }
 

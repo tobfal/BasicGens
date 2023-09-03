@@ -1,4 +1,4 @@
-package de.tobfal.basicgens.screen;
+package de.tobfal.basicgens.client.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.tobfal.basicgens.BasicGens;
@@ -13,12 +13,17 @@ import org.jetbrains.annotations.NotNull;
 
 public class GeneratorScreen extends AbstractContainerScreen<GeneratorMenu> {
 
+    //<editor-fold desc="Constants">
     private static final ResourceLocation TEXTURE = new ResourceLocation(BasicGens.MOD_ID, "textures/gui/generator_gui.png");
+    //</editor-fold>
 
+    //<editor-fold desc="Constructor">
     public GeneratorScreen(GeneratorMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
     }
+    //</editor-fold>
 
+    //<editor-fold desc="Methods">
     @Override
     protected void init() {
         super.init();
@@ -50,7 +55,8 @@ public class GeneratorScreen extends AbstractContainerScreen<GeneratorMenu> {
 
         int x = pMouseX - (width - imageWidth) / 2;
         int y = pMouseY - (height - imageHeight) / 2;
-        if(x > 155 && x < 164 && y > 10 && y < 75)
-            pGuiGraphics.renderTooltip(this.font, Component.literal(String.format("%.1f kRF/%.0f kRF", menu.getEnergy()/1000f, menu.getMaxEnergy()/1000f)), pMouseX, pMouseY);
+        if (x > 155 && x < 164 && y > 10 && y < 75)
+            pGuiGraphics.renderTooltip(this.font, Component.literal(String.format("%.1f kRF/%.0f kRF", menu.getEnergy() / 1000f, menu.getMaxEnergy() / 1000f)), pMouseX, pMouseY);
     }
+    //</editor-fold>
 }

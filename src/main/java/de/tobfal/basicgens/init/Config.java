@@ -41,7 +41,7 @@ public class Config {
     private static void initCommon() {
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
 
-        // Stone Generator
+        //<editor-fold desc="Stone Generator">
         builder.comment("Stone Generator").push("stone_generator");
         STONE_GENERATOR_PERTICK = builder
                 .comment("RF/t produced by the generator")
@@ -56,9 +56,9 @@ public class Config {
                 .comment("Fuel efficiency relative to minecraft default burn time (generatorBurnTime = minecraftBurnTime * fuelEfficiency)")
                 .defineInRange("fuelEfficiency", 0.75, 0, Double.MAX_VALUE);
         builder.pop();
-        //----------------
+        //</editor-fold>
 
-        // Iron Generator
+        //<editor-fold desc="Iron Generator">
         builder.comment("Iron Generator").push("iron_generator");
         IRON_GENERATOR_PERTICK = builder
                 .comment("RF/t produced by the generator")
@@ -73,9 +73,9 @@ public class Config {
                 .comment("Fuel efficiency relative to minecraft default burn time (generatorBurnTime = minecraftBurnTime * fuelEfficiency)")
                 .defineInRange("fuelEfficiency", 1, 0, Double.MAX_VALUE);
         builder.pop();
-        //----------------
+        //</editor-fold>
 
-        // Gold Generator
+        //<editor-fold desc="Gold Generator">
         builder.comment("Gold Generator").push("gold_generator");
         GOLD_GENERATOR_PERTICK = builder
                 .comment("RF/t produced by the generator")
@@ -90,9 +90,9 @@ public class Config {
                 .comment("Fuel efficiency relative to minecraft default burn time (generatorBurnTime = minecraftBurnTime * fuelEfficiency)")
                 .defineInRange("fuelEfficiency", 1, 0, Double.MAX_VALUE);
         builder.pop();
-        //----------------
+        //</editor-fold>
 
-        // Nether Generator
+        //<editor-fold desc="Nether Generator">
         builder.comment("Nether Generator").push("nether_generator");
         NETHER_GENERATOR_PERTICK = builder
                 .comment("RF/t produced by the generator")
@@ -107,9 +107,9 @@ public class Config {
                 .comment("mB of fluid used per tick")
                 .defineInRange("fuelEfficiency", 1, 1, Integer.MAX_VALUE);
         builder.pop();
-        //----------------
+        //</editor-fold>
 
-        // Glowstone Generator
+        //<editor-fold desc="Glowstone Generator">
         builder.comment("Glowstone Generator").push("glowstone_generator");
         GLOWSTONE_GENERATOR_PERTICK = builder
                 .comment("RF/t produced by the generator")
@@ -124,7 +124,7 @@ public class Config {
                 .comment("mB of fluid used per tick")
                 .defineInRange("fuelEfficiency", 1, 1, Integer.MAX_VALUE);
         builder.pop();
-        //----------------
+        //</editor-fold>
 
         COMMON_CONFIG = builder.build();
     }

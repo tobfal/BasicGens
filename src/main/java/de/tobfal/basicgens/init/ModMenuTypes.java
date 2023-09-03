@@ -18,9 +18,11 @@ public class ModMenuTypes {
     public static final RegistryObject<MenuType<GeneratorMenu>> GENERATOR_MENU = registerMenuType(GeneratorMenu::new, "generator_menu");
     public static final RegistryObject<MenuType<FluidGeneratorMenu>> FLUID_GENERATOR_MENU = registerMenuType(FluidGeneratorMenu::new, "fluid_generator_menu");
 
+    //<editor-fold desc="Methods">
     private static <T extends AbstractContainerMenu> RegistryObject<MenuType<T>> registerMenuType(IContainerFactory<T> factory, String name) {
         return MENUS.register(name, () -> IForgeMenuType.create(factory));
     }
+    //</editor-fold>
 
     public static void register(IEventBus eventBus) {
         MENUS.register(eventBus);

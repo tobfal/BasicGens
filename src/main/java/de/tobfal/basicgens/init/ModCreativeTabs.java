@@ -29,10 +29,12 @@ public class ModCreativeTabs {
             .build()
     );
 
+    //<editor-fold desc="Methods">
     public static <T extends Item> RegistryObject<T> addToTab(RegistryObject<T> itemLike) {
         BASICGENS_TAB_ITEMS.add(itemLike);
         return itemLike;
     }
+    //</editor-fold>
 
     public static void register(IEventBus eventBus) {
         BASICGENS_TABS.register(eventBus);
